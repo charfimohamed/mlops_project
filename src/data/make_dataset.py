@@ -36,5 +36,5 @@ if __name__ == '__main__':
     # load up the .env entries as environment variables
     load_dotenv(find_dotenv())
 
-    download_raw_data(project_dir / data / raw)
+    download_raw_data(project_dir / "data" / "raw")
     main()
