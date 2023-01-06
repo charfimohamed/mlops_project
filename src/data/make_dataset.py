@@ -3,7 +3,7 @@ import click
 import logging
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
-
+import kaggle
 
 @click.command()
 @click.argument('input_filepath', type=click.Path(exists=True))
@@ -16,6 +16,15 @@ def main(input_filepath, output_filepath):
     logger.info('making final data set from raw data')
 
 
+def download_raw_data(download_path):
+    """
+    Downloads raw data from Kaggle. 
+    
+    Make sure to setup your access token using https://adityashrm21.github.io/Setting-Up-Kaggle/
+    """
+    kaggle.api.authenticate()
+    kaggle.api.dataset_download_files('alifrahman/dataset-for-wbc-classification', path=download_path, unzip=True)
+    
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)
@@ -27,4 +36,5 @@ if __name__ == '__main__':
     # load up the .env entries as environment variables
     load_dotenv(find_dotenv())
 
+    download_raw_data(project_dir / "data" / "raw")
     main()

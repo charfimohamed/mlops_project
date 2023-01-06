@@ -1,28 +1,52 @@
-Binary classification of cats and dogs
+MLOPS project description - Binary classification of cats and dogs
 ==============================
+Nojus Mickus s174447
 
 ### Overall goal of the project
 
-The goal of the project is to use convolutional neural networks for binary classification of cats and dogs.
-Project Organization
+The goal of the project is to use convolutional neural network for binary classification of cats and dogs.
+
 
 ### What framework are you going to use (PyTorch Image Models, Transformer, Pytorch-Geometrics)
 
-Since we are working with cat and dog images we will be using [PyTorch Image Models](https://github.com/rwightman/pytorch-image-models).
+Since we are working with cat and dog images we will be using [PyTorch Image Models](https://github.com/rwightman/pytorch-image-models) as our framework.
 
 
 ### How to you intend to include the framework into your project
 
+We are going to use one of the pre-trained model from PyTorch Image Models.
+
 
 ### What data are you going to run on (initially, may change)
 
-Initially, we plan to use 700 images of cats and dogs found on [Kaggle](https://www.kaggle.com/code/samuelcortinhas/cats-and-dogs-binary-classification/data?select=test).
+Initially, we plan to use cats and dogs [dataset](https://www.kaggle.com/datasets/alifrahman/dataset-for-wbc-classification) found on Kaggle. It contains 1000 examples each for training and 401 each for validation.
 
 
 ### What deep learning models do you expect to use
 
-We are planning to use [Inception ResNet v2](https://arxiv.org/pdf/1602.07261.pdf) which build on the Inception architecture but replaces the filter concatenation stage with residual connections. We will use the [implemented pre-trained model](https://huggingface.co/docs/timm/models/inception-resnet-v2) from PyTorch Image Models.
+We are planning to use [Inception ResNet v2](https://arxiv.org/pdf/1602.07261.pdf) which builds on the Inception architecture but replaces the filter concatenation stage with residual connections. We will use the [implemented pre-trained model](https://huggingface.co/docs/timm/models/inception-resnet-v2) from PyTorch Image Models.
 
+Get started
+------------
+1. Set up [Kaggle API](https://adityashrm21.github.io/Setting-Up-Kaggle/) on your local machine.
+2. Clone the repo:
+```
+git clone https://github.com/charfimohamed/mlops_project
+cd mlops_project
+```
+3. Create a new `conda` environment:
+```
+conda create -n mlops_project python=3.9
+conda activate mlops_project
+```
+4. Install the dependencies
+```
+pip install -r requirements.txt
+```
+5. 
+```
+make data
+```
 
 Project Organization
 ------------
