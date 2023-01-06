@@ -1,7 +1,8 @@
 MLOPS project description - Binary classification of cats and dogs
 ==============================
 Nojus Mickus s174447
-
+Mohamed Charfi s221586
+Ahmed Aziz Ben Haj Hmida s221551
 ### Overall goal of the project
 
 The goal of the project is to use convolutional neural network for binary classification of cats and dogs.
