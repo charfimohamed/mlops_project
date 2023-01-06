@@ -26,6 +26,27 @@ Initially, we plan to use cats and dogs [dataset](https://www.kaggle.com/dataset
 
 We are planning to use [Inception ResNet v2](https://arxiv.org/pdf/1602.07261.pdf) which builds on the Inception architecture but replaces the filter concatenation stage with residual connections. We will use the [implemented pre-trained model](https://huggingface.co/docs/timm/models/inception-resnet-v2) from PyTorch Image Models.
 
+Get started
+------------
+1. Set up [Kaggle API](https://adityashrm21.github.io/Setting-Up-Kaggle/) on your local machine.
+2. Clone the repo:
+```
+git clone https://github.com/charfimohamed/mlops_project
+cd mlops_project
+```
+3. Create a new `conda` environment:
+```
+conda create -n mlops_project python=3.9
+conda activate mlops_project
+```
+4. Install the dependencies
+```
+pip install -r requirements.txt
+```
+5. 
+```
+make data
+```
 
 Project Organization
 ------------
