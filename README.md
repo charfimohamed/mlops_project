@@ -1,7 +1,28 @@
-cat dog classifier
+Binary classification of cats and dogs
 ==============================
 
-this project tries to classiifie pictures of dogs and cats 
+### Overall goal of the project
+
+The goal of the project is to use convolutional neural networks for binary classification of cats and dogs.
+Project Organization
+
+### What framework are you going to use (PyTorch Image Models, Transformer, Pytorch-Geometrics)
+
+Since we are working with cat and dog images we will be using [PyTorch Image Models](https://github.com/rwightman/pytorch-image-models).
+
+
+### How to you intend to include the framework into your project
+
+
+### What data are you going to run on (initially, may change)
+
+Initially, we plan to use 700 images of cats and dogs found on [Kaggle](https://www.kaggle.com/code/samuelcortinhas/cats-and-dogs-binary-classification/data?select=test).
+
+
+### What deep learning models do you expect to use
+
+We are planning to use [Inception ResNet v2](https://arxiv.org/pdf/1602.07261.pdf) which build on the Inception architecture but replaces the filter concatenation stage with residual connections. We will use the [implemented pre-trained model](https://huggingface.co/docs/timm/models/inception-resnet-v2) from PyTorch Image Models.
+
 
 Project Organization
 ------------
