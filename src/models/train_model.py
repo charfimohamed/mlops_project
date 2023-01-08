@@ -55,7 +55,6 @@ def train (batch_size = 32, epochs = 10, lr = 0.03):
             loss = loss_fn(output,labels)
             loss.backward()
             optimizer.step()
-
             total_loss += loss.item()
 
         train_loss = model.training_step(batch = train_dataloader , batch_idx= epoch)
