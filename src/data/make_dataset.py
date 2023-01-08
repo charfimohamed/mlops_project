@@ -121,9 +121,6 @@ def main(input_filepath, output_filepath):
     validation_dataset = CatDogDataset(split="validation", in_folder=input_filepath, out_folder=output_filepath, transform=data_resize)
     test_dataset = CatDogDataset(split="test", in_folder=input_filepath, out_folder=output_filepath, transform=data_resize)  
 
-
-
-
     train_dataloader = DataLoader(train_dataset, batch_size = 32, shuffle=True)
     validation_dataloader = DataLoader(validation_dataset, batch_size = 32, shuffle=True)
     test_dataloader = DataLoader(test_dataset, batch_size = 32, shuffle=True)
