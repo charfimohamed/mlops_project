@@ -7,30 +7,44 @@ import torch
 import torch.nn as nn
 from torch.optim import Adam
 from torch.utils.data import Dataset, DataLoader
-from model import CatDogModel
+from src.models.model import CatDogModel
 from src.data import make_dataset
 from src.data.make_dataset import CatDogDataset
 import wandb
 from pathlib import Path
 from torchvision import transforms
+from pytorch_lightning import Trainer
+import matplotlib.pyplot as plt
+import torchvision
+import numpy as np
+
 
 
 #sys.path.append("..")
 #log = logging.getLogger(__name__)
 #print = log.info
 
+def compute_validation_metrics(model, dataloader, loss_fn):
+    model.eval()
+    total_loss = 0
+    total_acc = 0
+    with torch.no_grad():
+        for inputs, labels in dataloader:
+            outputs = model(inputs)
+            loss = loss_fn(outputs, labels)
+            total_loss += loss.item()
+            _, preds = torch.max(outputs, dim=1)
+            total_acc += (preds == labels).sum().item()
+    return total_loss / len(dataloader), total_acc / len(dataloader)
 
 #training_function
-def train (batch_size = 32, epochs = 10, lr = 0.03):
+
+def train (batch_size = 32, epochs = 10, lr = 0.001):
     ''' Trains a neural network from the TIMM framework'''
-
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    
-    model = CatDogModel(num_classes =2)
+    model = CatDogModel()
     model.to(DEVICE)
-    dataset = make_dataset(split = "train", )
     
-
     image_size = 224
     data_resize = transforms.Compose([
         transforms.Resize((image_size, image_size)),
@@ -41,24 +55,29 @@ def train (batch_size = 32, epochs = 10, lr = 0.03):
    
     train_dataloader = DataLoader(train_dataset, batch_size = batch_size, shuffle=True)
     validation_dataloader = DataLoader(validation_dataset, batch_size = batch_size, shuffle=True)
-
-
-    optimizer = Adam(model.parameters(), lr=lr)
+    optimizer = Adam(model.parameters(),lr=lr)
     loss_fn = torch.nn.CrossEntropyLoss()
+    #samples, labels = next(iter(train_dataloader))
+    #plt.figure(figsize=(16,24))
+    #grid_imgs = torchvision.utils.make_grid(samples[:24])
+    #np_grid_imgs = grid_imgs.numpy()
+    #plt.title("24 samples of train data rezised to 224x224 pixels")
+    #plt.imshow(np.transpose(np_grid_imgs, (1,2,0)))
+    #plt.show()
 
     for epoch in range(epochs):
+        print("epoch{i}".format(i=epoch))
         total_loss = 0
         for images, labels in train_dataloader:
-            
-            optimizer.zero_grad()
             output = model(images)
             loss = loss_fn(output,labels)
+            optimizer.zero_grad()
             loss.backward()
             optimizer.step()
             total_loss += loss.item()
 
-        train_loss = model.training_step(batch = train_dataloader , batch_idx= epoch)
-        val_acc = model.validation_step(batch = validation_dataloader , batch_idx= epoch)
+        train_loss, train_acc = compute_validation_metrics(model,train_dataloader)
+        val_loss, val_acc = compute_validation_metrics(model,validation_dataloader)
 
         #wandb.log({
             #'epoch': epoch, 
@@ -78,5 +97,5 @@ def train (batch_size = 32, epochs = 10, lr = 0.03):
 
 
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     train()
