@@ -6,15 +6,28 @@ from torch.utils.data import Dataset,dataloader
 import numpy as np
 import os
 import matplotlib as plt
+import torch.nn.functional as F
 
 
 class CatDogModel(nn.Module):
     def __init__(self):
         super().__init__()
-        self.model = timm.create_model('ens_adv_inception_resnet_v2', num_classes = 2 ,pretrained=True)
+        self.model = nn.Sequential(
+            nn.Linear((64**2)*3, 1024),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(1024, 256),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(256, 32),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(32, 2)
+        )
 
-    def forward(self,x):
-        return self.model(x)
+    def forward(self, x):
+        x=x.view(x.shape[0],-1)
+        return F.softmax(self.model(x))
 
     #def training_step(self, batch, batch_idx):
     #    data, target = batch

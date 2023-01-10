@@ -7,12 +7,12 @@ import torch
 import torch.nn as nn
 from torch.optim import Adam
 from torch.utils.data import Dataset, DataLoader
-from model import CatDogModel
 from src.data import make_dataset
 from src.data.make_dataset import CatDogDataset
 import wandb
 from pathlib import Path
 from torchvision import transforms
+from src.models.train_model import *
 
 
 #sys.path.append("..")
@@ -21,27 +21,30 @@ from torchvision import transforms
 
 
 #training_function
-def test (batch_size = 32, epochs = 10):
+def test (batch_size = 32):
     ''' tests the neural network after training'''
-
+    print("_____")
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = CatDogModel(num_classes =2)
+    model = train()
     model.to(DEVICE)
-    dataset = make_dataset(split = "train", )
     
-
-    image_size = 224
+    image_size = 128
     data_resize = transforms.Compose([
         transforms.Resize((image_size, image_size)),
         transforms.ToTensor()])
 
     test_dataset = CatDogDataset(split="test", in_folder=Path("../data/raw"), out_folder=Path('../data/processed'), transform=data_resize)
     test_dataloader = DataLoader(test_dataset, batch_size = batch_size, shuffle=True)
+    correct=0
+    for i, (images, labels) in enumerate(test_dataloader):
+        output = model(images)
+        preds = torch.argmax(output,dim=1)
+        correct = correct + (preds==labels).sum()
 
+    test_accuracy = correct/(batch_size*len(labels))
+    print(int(correct))
+    print("accuracy = {i}".format(i=test_accuracy))
 
-    for epoch in range(epochs):
-        test_acc = model.test_step(batch = test_dataloader , batch_idx= epoch)
-        print("accuracy = " + test_acc) 
         #wandb.log({
             #'epoch': epoch, 
             #'train_acc': train_acc,
@@ -54,5 +57,5 @@ def test (batch_size = 32, epochs = 10):
     
     return model  
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     test()

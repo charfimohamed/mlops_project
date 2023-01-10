@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-
+import timm
 #import hydra
 import torch
 import torch.nn as nn
@@ -28,6 +28,7 @@ def compute_validation_metrics(model, dataloader, loss_fn):
     model.eval()
     total_loss = 0
     total_acc = 0
+    nb_samples = 0
     with torch.no_grad():
         for inputs, labels in dataloader:
             outputs = model(inputs)
@@ -35,17 +36,18 @@ def compute_validation_metrics(model, dataloader, loss_fn):
             total_loss += loss.item()
             _, preds = torch.max(outputs, dim=1)
             total_acc += (preds == labels).sum().item()
-    return total_loss / len(dataloader), total_acc / len(dataloader)
+            nb_samples += preds.shape[0]
+    return total_loss/nb_samples , total_acc/nb_samples
 
 #training_function
 
 def train (batch_size = 32, epochs = 10, lr = 0.001):
     ''' Trains a neural network from the TIMM framework'''
-    DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    #DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = CatDogModel()
-    model.to(DEVICE)
+    #model.to(DEVICE)
     
-    image_size = 224
+    image_size = 64
     data_resize = transforms.Compose([
         transforms.Resize((image_size, image_size)),
         transforms.ToTensor()])
@@ -57,27 +59,34 @@ def train (batch_size = 32, epochs = 10, lr = 0.001):
     validation_dataloader = DataLoader(validation_dataset, batch_size = batch_size, shuffle=True)
     optimizer = Adam(model.parameters(),lr=lr)
     loss_fn = torch.nn.CrossEntropyLoss()
+    #models = timm.list_models()
+    #print(models)   
     #samples, labels = next(iter(train_dataloader))
+    #print(labels)
     #plt.figure(figsize=(16,24))
     #grid_imgs = torchvision.utils.make_grid(samples[:24])
     #np_grid_imgs = grid_imgs.numpy()
     #plt.title("24 samples of train data rezised to 224x224 pixels")
     #plt.imshow(np.transpose(np_grid_imgs, (1,2,0)))
     #plt.show()
-
+    
     for epoch in range(epochs):
         print("epoch{i}".format(i=epoch))
         total_loss = 0
-        for images, labels in train_dataloader:
+        for i, (images, labels) in enumerate(train_dataloader):
             output = model(images)
+            print(f"step {i}")
+            #print(labels)
             loss = loss_fn(output,labels)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
             total_loss += loss.item()
+        train_loss, train_acc = compute_validation_metrics(model,train_dataloader,loss_fn)
+        val_loss, val_acc = compute_validation_metrics(model,validation_dataloader,loss_fn)
+        print("training accuracy = {i}".format(i=train_acc))
+        print("validation accuracy = {i}".format(i=val_acc))
 
-        train_loss, train_acc = compute_validation_metrics(model,train_dataloader)
-        val_loss, val_acc = compute_validation_metrics(model,validation_dataloader)
 
         #wandb.log({
             #'epoch': epoch, 
