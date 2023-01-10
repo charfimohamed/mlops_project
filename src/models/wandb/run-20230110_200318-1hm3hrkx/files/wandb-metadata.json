@@ -1,0 +1,77 @@
+{
+    "os": "Linux-5.10.16.3-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "python": "3.9.12",
+    "heartbeatAt": "2023-01-10T19:03:19.304230",
+    "startedAt": "2023-01-10T19:03:18.344889",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/root/miniconda3/mlops_project/src/models/train_model.py",
+    "codePath": "src/models/train_model.py",
+    "git": {
+        "remote": "https://github.com/charfimohamed/mlops_project",
+        "commit": "0b6f6054a26d807b1fd13a890e74f274cff89759"
+    },
+    "email": "ahmed.benhajhmida@epfl.ch",
+    "root": "/root/miniconda3/mlops_project",
+    "host": "LAPTOP-2H4B2R3C",
+    "username": "root",
+    "executable": "/root/miniconda3/bin/python",
+    "cpu_count": 4,
+    "cpu_count_logical": 8,
+    "cpu_freq": {
+        "current": 2803.197,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2803.197,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2803.197,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2803.197,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2803.197,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2803.197,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2803.197,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2803.197,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2803.197,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "total": 250.98248672485352,
+        "used": 21.488426208496094
+    },
+    "memory": {
+        "total": 12.236808776855469
+    }
+}

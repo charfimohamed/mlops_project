@@ -6,6 +6,7 @@ import timm
 import torch
 import torch.nn as nn
 from torch.optim import Adam
+from torch.optim import sgd
 from torch.utils.data import Dataset, DataLoader
 from src.models.model import CatDogModel
 from src.data import make_dataset
@@ -17,12 +18,20 @@ from pytorch_lightning import Trainer
 import matplotlib.pyplot as plt
 import torchvision
 import numpy as np
-
-
+import pprint
+#from wandb.sweeps import HyperParameterSweep
 
 #sys.path.append("..")
-#log = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 #print = log.info
+
+wandb.init(project="test-project", entity="group18_mlops")
+wandb.config = {
+  "lr": 0.001,
+  "epochs": 10,
+  "batch_size": 32,
+  "dropout": 0.2
+}
 
 def compute_validation_metrics(model, dataloader, loss_fn):
     model.eval()
@@ -41,7 +50,7 @@ def compute_validation_metrics(model, dataloader, loss_fn):
 
 #training_function
 
-def train (batch_size = 32, epochs = 10, lr = 0.001):
+def train (batch_size = wandb.config["batch_size"], epochs = wandb.config["epochs"], lr = wandb.config["lr"]):
     ''' Trains a neural network from the TIMM framework'''
     #DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = CatDogModel()
@@ -59,18 +68,9 @@ def train (batch_size = 32, epochs = 10, lr = 0.001):
     validation_dataloader = DataLoader(validation_dataset, batch_size = batch_size, shuffle=True)
     optimizer = Adam(model.parameters(),lr=lr)
     loss_fn = torch.nn.CrossEntropyLoss()
-    #models = timm.list_models()
-    #print(models)   
-    #samples, labels = next(iter(train_dataloader))
-    #print(labels)
-    #plt.figure(figsize=(16,24))
-    #grid_imgs = torchvision.utils.make_grid(samples[:24])
-    #np_grid_imgs = grid_imgs.numpy()
-    #plt.title("24 samples of train data rezised to 224x224 pixels")
-    #plt.imshow(np.transpose(np_grid_imgs, (1,2,0)))
-    #plt.show()
+   
     
-    for epoch in range(epochs):
+    for epoch in range(wandb.config["epochs"]):
         print("epoch{i}".format(i=epoch))
         total_loss = 0
         for i, (images, labels) in enumerate(train_dataloader):
@@ -87,24 +87,45 @@ def train (batch_size = 32, epochs = 10, lr = 0.001):
         print("training accuracy = {i}".format(i=train_acc))
         print("validation accuracy = {i}".format(i=val_acc))
 
-
-        #wandb.log({
-            #'epoch': epoch, 
-            #'train_acc': train_acc,
-            #'train_loss': train_loss, 
-            #'val_acc': val_acc, 
-            #'val_loss': val_loss
-        #})
-
+        wandb.log({
+        'epoch': epoch, 
+        'train_acc': train_acc,
+        'validation_acc': val_acc,
+        'train_loss': train_loss,
+        'validation_loss': val_loss})
         #print('Average loss for epoch : {i}'.format(i=total_loss/len(train_loader)))
     
     return model  
 
 
 
-
-
-
-
 if __name__ == "__main__":
-    train()
+
+    sweep_configuration = {
+    'method': 'random',
+    'name': 'sweep',
+    'metric': {'goal': 'maximize', 'name': 'val_acc'},
+    'parameters': 
+     {
+        'batch_size': {'values': [16, 32, 64]},
+        'epochs': {'values': [5, 10, 15]},
+        'lr': {'max': 0.1, 'min': 0.0001},
+        'dropout':{'values': [0.2, 0.4, 0.6]},
+        'optimizer': {'values': ['adam', 'sgd']}
+
+     }
+    }
+    pprint.pprint(sweep_configuration)
+
+    # Create a sweep
+    sweep_id = wandb.sweep(sweep_configuration, project="group18_mlops")
+   
+
+    
+    
+train()  # training function call
+        
+    # Run the sweep
+wandb.agent(sweep_id, function="train()", count=4)
+
+wandb.finish()
