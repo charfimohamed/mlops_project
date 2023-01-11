@@ -1,0 +1,8 @@
+wandb_version: 1
+
+batch_size:
+  value: 16
+lr:
+  value: 0.025567587575119594
+optimizer:
+  value: sgd

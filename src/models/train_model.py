@@ -3,6 +3,8 @@ import os
 import sys
 import timm
 #import hydra
+import wandb
+import pprint
 import torch
 import torch.nn as nn
 from torch.optim import Adam
@@ -10,16 +12,14 @@ from torch.utils.data import Dataset, DataLoader
 from src.models.model import CatDogModel
 from src.data import make_dataset
 from src.data.make_dataset import CatDogDataset
-import wandb
 from pathlib import Path
 from torchvision import transforms
 from pytorch_lightning import Trainer
 import matplotlib.pyplot as plt
-import torchvision
 import numpy as np
 
 #sys.path.append("..")
-#log = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 #print = log.info
 
 
@@ -31,6 +31,10 @@ def save_checkpoint(model,epoch,best_accuracy):
     'best accuracy': best_accuracy,
     }
     torch.save (state, 'model_best_checkpoint.pth')
+
+def train_hp():
+    wandb.init(project="test-project", entity="group18_mlops")
+    train(batch_size=wandb.config.batch_size, epochs=5, lr=wandb.config.lr)
 
 #training_function
 def train (batch_size = 32, epochs = 10, lr = 0.001):
@@ -86,15 +90,38 @@ def train (batch_size = 32, epochs = 10, lr = 0.001):
         if(validation_accuracy>best_accuracy):
             best_accuracy=validation_accuracy
             save_checkpoint(model,epoch,best_accuracy)
-    return model  
-            
 
-        #wandb.log({
-            #'epoch': epoch, 
-            #'train_acc': train_acc,
-            #'train_loss': train_loss, 
-            #'val_acc': val_acc, 
-            #'val_loss': val_loss
-        #})
+        wandb.log({
+        'epoch': epoch, 
+        'train_acc': train_accuracy,
+        'validation_acc': validation_accuracy,
+        'train_loss': train_loss,}) 
+    return model  
+           
+
 if __name__ == "__main__":
-    train()
+
+    sweep_configuration = {
+    'method': 'random',
+    'name': 'sweep',
+    'metric': {'goal': 'maximize', 'name': 'validation_acc'},
+    'parameters': 
+     {
+        'batch_size': {'values': [16, 32, 64]},
+        'lr': {'max': 0.1, 'min': 0.0001},
+        'optimizer': {'values': ['adam', 'sgd']}
+
+     }
+    }
+    pprint.pprint(sweep_configuration)
+
+    # Create a sweep
+    sweep_id = wandb.sweep(sweep_configuration, project="group18_mlops")
+   
+    
+    #train()  # training function call
+        
+    # Run the sweep
+    wandb.agent(sweep_id, function=train_hp, count=4)
+
+    wandb.finish()
