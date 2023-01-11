@@ -1,8 +1,11 @@
 MLOPS project description - Binary classification of cats and dogs
 ==============================
 Nojus Mickus s174447.
+
 Mohamed Charfi s221586.
+
 Ahmed Aziz Ben Haj Hmida s221551.
+
 ### Overall goal of the project
 
 The goal of the project is to use convolutional neural network for binary classification of cats and dogs.
@@ -10,12 +13,12 @@ The goal of the project is to use convolutional neural network for binary classi
 
 ### What framework are you going to use (PyTorch Image Models, Transformer, Pytorch-Geometrics)
 
-Since we are working with cat and dog images we will be using [PyTorch Image Models](https://github.com/rwightman/pytorch-image-models) as our framework.
+Since we are working with cat and dog images we will be using pytorchvision
 
 
 ### How to you intend to include the framework into your project
 
-We are going to use one of the pre-trained model from PyTorch Image Models.
+We are going to use one of the pre-trained model from torch vision .
 
 
 ### What data are you going to run on (initially, may change)
