@@ -13,7 +13,7 @@ The goal of the project is to use convolutional neural network for binary classi
 
 ### What framework are you going to use (PyTorch Image Models, Transformer, Pytorch-Geometrics)
 
-Since we are working with cat and dog images we will be using pytorchvision
+Since we are working with cat and dog images we will be using torchvision
 
 
 ### How to you intend to include the framework into your project
