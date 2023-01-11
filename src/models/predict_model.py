@@ -23,27 +23,34 @@ from src.models.train_model import *
 #training_function
 def test (batch_size = 32):
     ''' tests the neural network after training'''
-    print("_____")
-    DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = train()
-    model.to(DEVICE)
+    #print("_____")
+    #DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = torch.load('model_best_checkpoint.pth')
+    model=CatDogModel()
+    checkpoint = torch.load('model_best_checkpoint.pth')
+    model.load_state_dict(checkpoint['model'])
+    model.eval()
+    #model.to(DEVICE)
     
-    image_size = 128
+    image_size = model.im_size
     data_resize = transforms.Compose([
         transforms.Resize((image_size, image_size)),
-        transforms.ToTensor()])
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])])
 
     test_dataset = CatDogDataset(split="test", in_folder=Path("../data/raw"), out_folder=Path('../data/processed'), transform=data_resize)
     test_dataloader = DataLoader(test_dataset, batch_size = batch_size, shuffle=True)
-    correct=0
-    for i, (images, labels) in enumerate(test_dataloader):
-        output = model(images)
-        preds = torch.argmax(output,dim=1)
-        correct = correct + (preds==labels).sum()
-
-    test_accuracy = correct/(batch_size*len(labels))
-    print(int(correct))
-    print("accuracy = {i}".format(i=test_accuracy))
+    nb_test_samples=0
+    test_accuracy = 0
+    for i,(images, labels) in enumerate(test_dataloader) :
+        print(f"test step {i}")
+        outputs = model(images)
+        _, preds = torch.max(outputs, dim=1)
+        test_accuracy+=torch.sum(preds==labels)
+        nb_test_samples += preds.shape[0]
+    test_accuracy = test_accuracy /nb_test_samples
+    print(f"test accuracy : {test_accuracy}")
+    
 
         #wandb.log({
             #'epoch': epoch, 
