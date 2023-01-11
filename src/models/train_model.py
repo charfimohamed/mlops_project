@@ -25,13 +25,13 @@ import pprint
 log = logging.getLogger(__name__)
 #print = log.info
 
-wandb.init(project="test-project", entity="group18_mlops")
-wandb.config = {
-  "lr": 0.001,
-  "epochs": 10,
-  "batch_size": 32,
-  "dropout": 0.2
-}
+# wandb.init(project="test-project", entity="group18_mlops")
+# wandb.config = {
+#   "lr": 0.001,
+#   "epochs": 2,
+#   "batch_size": 32,
+#   "dropout": 0.2
+# }
 
 def compute_validation_metrics(model, dataloader, loss_fn):
     model.eval()
@@ -50,7 +50,7 @@ def compute_validation_metrics(model, dataloader, loss_fn):
 
 #training_function
 
-def train (batch_size = wandb.config["batch_size"], epochs = wandb.config["epochs"], lr = wandb.config["lr"]):
+def train (batch_size, epochs, lr):# = wandb.config["batch_size"], epochs = wandb.config["epochs"], lr = wandb.config["lr"]):
     ''' Trains a neural network from the TIMM framework'''
     #DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = CatDogModel()
@@ -98,17 +98,21 @@ def train (batch_size = wandb.config["batch_size"], epochs = wandb.config["epoch
     return model  
 
 
+def train_hp():
+    wandb.init(project="test-project", entity="group18_mlops")
+    train(batch_size=wandb.config.batch_size, epochs=wandb.config.epochs, lr=wandb.config.lr)
+
 
 if __name__ == "__main__":
 
     sweep_configuration = {
     'method': 'random',
     'name': 'sweep',
-    'metric': {'goal': 'maximize', 'name': 'val_acc'},
+    'metric': {'goal': 'maximize', 'name': 'validation_acc'},
     'parameters': 
      {
         'batch_size': {'values': [16, 32, 64]},
-        'epochs': {'values': [5, 10, 15]},
+        'epochs': {'values': [1, 2]},
         'lr': {'max': 0.1, 'min': 0.0001},
         'dropout':{'values': [0.2, 0.4, 0.6]},
         'optimizer': {'values': ['adam', 'sgd']}
@@ -123,9 +127,9 @@ if __name__ == "__main__":
 
     
     
-train()  # training function call
+    #train()  # training function call
         
     # Run the sweep
-wandb.agent(sweep_id, function="train()", count=4)
+    wandb.agent(sweep_id, function=train_hp, count=4)
 
-wandb.finish()
+    wandb.finish()

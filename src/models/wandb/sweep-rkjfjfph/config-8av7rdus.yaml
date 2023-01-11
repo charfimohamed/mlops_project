@@ -1,0 +1,12 @@
+wandb_version: 1
+
+batch_size:
+  value: 32
+dropout:
+  value: 0.6
+epochs:
+  value: 1
+lr:
+  value: 0.08387954209148568
+optimizer:
+  value: sgd
