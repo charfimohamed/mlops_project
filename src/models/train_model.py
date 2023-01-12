@@ -8,6 +8,8 @@ import pprint
 import torch
 import torch.nn as nn
 from torch.optim import Adam
+from torch.optim import SGD
+
 from torch.utils.data import Dataset, DataLoader
 from src.models.model import CatDogModel
 from src.data import make_dataset
@@ -34,10 +36,10 @@ def save_checkpoint(model,epoch,best_accuracy):
 
 def train_hp():
     wandb.init(project="test-project", entity="group18_mlops")
-    train(batch_size=wandb.config.batch_size, epochs=5, lr=wandb.config.lr)
+    train(batch_size=wandb.config.batch_size, epochs=5, lr=wandb.config.lr,optimizer_name=wandb.config.optimizer)
 
 #training_function
-def train (batch_size = 32, epochs = 10, lr = 0.001):
+def train (batch_size = 32, epochs = 5, lr = 0.001, optimizer_name='adam'):
     ''' Trains a neural network from the TIMM framework'''
     #DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     #model = CatDogModel()
@@ -53,7 +55,11 @@ def train (batch_size = 32, epochs = 10, lr = 0.001):
     validation_dataset = CatDogDataset(split="validation", in_folder=Path("../data/raw"), out_folder=Path('../data/processed'), transform=data_resize)
     train_dataloader = DataLoader(train_dataset, batch_size = batch_size, shuffle=True)
     validation_dataloader = DataLoader(validation_dataset, batch_size = batch_size, shuffle=True)
-    optimizer = Adam(model.parameters(),lr=lr)
+    if(optimizer_name=='sgd'):
+        optimizer = SGD(model.parameters(),lr=lr)
+    if(optimizer_name=='adam'):
+        optimizer = Adam(model.parameters(),lr=lr)
+
     loss_fn = torch.nn.CrossEntropyLoss()
     best_accuracy = 0.0 # accuracy of the best epoch to know what wights to save 
     for epoch in range(epochs):
@@ -92,9 +98,9 @@ def train (batch_size = 32, epochs = 10, lr = 0.001):
             save_checkpoint(model,epoch,best_accuracy)
 
         wandb.log({
-        'epoch': epoch, 
         'train_acc': train_accuracy,
         'validation_acc': validation_accuracy,
+        'best_accuracy':best_accuracy,
         'train_loss': train_loss,}) 
     return model  
            
@@ -104,11 +110,11 @@ if __name__ == "__main__":
     sweep_configuration = {
     'method': 'random',
     'name': 'sweep',
-    'metric': {'goal': 'maximize', 'name': 'validation_acc'},
+    'metric': {'goal': 'maximize', 'name': 'best_accuracy'},
     'parameters': 
      {
         'batch_size': {'values': [16, 32, 64]},
-        'lr': {'max': 0.1, 'min': 0.0001},
+        'lr': {'max': 0.001, 'min': 0.0001},
         'optimizer': {'values': ['adam', 'sgd']}
 
      }

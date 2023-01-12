@@ -17,7 +17,7 @@ class CatDogModel(nn.Module):
         self.model= torchvision.models.resnet50(pretrained=True)
         self.num_ftrs = self.model.fc.in_features
         self.model.fc = nn.Linear(self.num_ftrs, 2)
-        self.im_size = 16
+        self.im_size = 64
         #self.conv1 =  nn.Conv2d(in_channels=3, out_channels=12, kernel_size=3, stride=1, padding=1) #Shape= (32, 12, im_size, im_size)
         #self.norm1 = nn.BatchNorm2d(num_features=12) #Shape= (32, 12, im_size, im_size)
         #self.relu1 = nn.ReLU() #relu
