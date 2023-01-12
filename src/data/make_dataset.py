@@ -131,7 +131,10 @@ if __name__ == '__main__':
 
     # not used in this stub but often useful for finding various files
     project_dir = Path(__file__).resolve().parents[2]
-
+    (project_dir / "data" / "raw").mkdir(parents=True, exist_ok=True)
+    (project_dir / "data" / "processed").mkdir(parents=True, exist_ok=True)
+    (project_dir / "data" / "interim").mkdir(parents=True, exist_ok=True)
+    (project_dir / "data" / "external").mkdir(parents=True, exist_ok=True)
     # find .env automagically by walking up directories until it's found, then
     # load up the .env entries as environment variables
     load_dotenv(find_dotenv())
