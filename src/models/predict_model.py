@@ -51,17 +51,6 @@ def test (batch_size = 32):
     test_accuracy = test_accuracy /nb_test_samples
     print(f"test accuracy : {test_accuracy}")
     
-
-        #wandb.log({
-            #'epoch': epoch, 
-            #'train_acc': train_acc,
-            #'train_loss': train_loss, 
-            #'val_acc': val_acc, 
-            #'val_loss': val_loss
-        #})
-
-        #print('Average loss for epoch : {i}'.format(i=total_loss/len(train_loader)))
-    
     return model  
 
 if __name__ == "__main__":
