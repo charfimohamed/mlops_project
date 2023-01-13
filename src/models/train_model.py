@@ -1,15 +1,11 @@
 import logging
 import os
 import sys
-import timm
-#import hydra
-import wandb
-import pprint
 import torch
 import torch.nn as nn
 from torch.optim import Adam
 from torch.optim import SGD
-
+from omegaconf import DictConfig,OmegaConf
 from torch.utils.data import Dataset, DataLoader
 from src.models.model import CatDogModel
 from src.data import make_dataset
@@ -24,8 +20,7 @@ import numpy as np
 log = logging.getLogger(__name__)
 #print = log.info
 
-
-def save_checkpoint(model,epoch,best_accuracy):
+def save_checkpoint(model: CatDogModel ,epoch: int ,best_accuracy:float):
     print("------> saving checkpoint <------")
     state = {
     'epoch': epoch + 1,
@@ -34,13 +29,8 @@ def save_checkpoint(model,epoch,best_accuracy):
     }
     torch.save (state, 'model_best_checkpoint.pth')
 
-def train_hp():
-    wandb.init(project="test-project", entity="group18_mlops")
-    train(batch_size=wandb.config.batch_size, epochs=5, lr=wandb.config.lr,optimizer_name=wandb.config.optimizer)
-
 #training_function
-def train (batch_size = 32, epochs = 5, lr = 0.001, optimizer_name='adam'):
-    ''' Trains a neural network from the TIMM framework'''
+def train (batch_size:int = 32, epochs:int = 5, lr:float = 0.0005, optimizer_name : str ='adam')->CatDogModel:
     #DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     #model = CatDogModel()
     #model.to(DEVICE)
@@ -51,8 +41,8 @@ def train (batch_size = 32, epochs = 5, lr = 0.001, optimizer_name='adam'):
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])])
 
-    train_dataset = CatDogDataset(split="train", in_folder=Path("../data/raw"), out_folder=Path('../data/processed'), transform=data_resize)
-    validation_dataset = CatDogDataset(split="validation", in_folder=Path("../data/raw"), out_folder=Path('../data/processed'), transform=data_resize)
+    train_dataset = CatDogDataset(split="train", in_folder=Path("../../data/raw"), out_folder=Path('../../data/processed'), transform=data_resize)
+    validation_dataset = CatDogDataset(split="validation", in_folder=Path("../../data/raw"), out_folder=Path('../../data/processed'), transform=data_resize)
     train_dataloader = DataLoader(train_dataset, batch_size = batch_size, shuffle=True)
     validation_dataloader = DataLoader(validation_dataset, batch_size = batch_size, shuffle=True)
     if(optimizer_name=='sgd'):
@@ -96,38 +86,8 @@ def train (batch_size = 32, epochs = 5, lr = 0.001, optimizer_name='adam'):
         if(validation_accuracy>best_accuracy):
             best_accuracy=validation_accuracy
             save_checkpoint(model,epoch,best_accuracy)
-
-        wandb.log({
-        'train_acc': train_accuracy,
-        'validation_acc': validation_accuracy,
-        'best_accuracy':best_accuracy,
-        'train_loss': train_loss,}) 
-    return model  
+    return model
            
 
 if __name__ == "__main__":
-
-    sweep_configuration = {
-    'method': 'random',
-    'name': 'sweep',
-    'metric': {'goal': 'maximize', 'name': 'best_accuracy'},
-    'parameters': 
-     {
-        'batch_size': {'values': [16, 32, 64]},
-        'lr': {'max': 0.001, 'min': 0.0001},
-        'optimizer': {'values': ['adam', 'sgd']}
-
-     }
-    }
-    pprint.pprint(sweep_configuration)
-
-    # Create a sweep
-    sweep_id = wandb.sweep(sweep_configuration, project="group18_mlops")
-   
-    
-    #train()  # training function call
-        
-    # Run the sweep
-    wandb.agent(sweep_id, function=train_hp, count=4)
-
-    wandb.finish()
+    train()
