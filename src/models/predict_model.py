@@ -1,61 +1,72 @@
-import logging
-import os
-import sys
-
-#import hydra
 import torch
-import torch.nn as nn
-from torch.optim import Adam
-from torch.utils.data import Dataset, DataLoader
-from src.data import make_dataset
+from torch.utils.data import DataLoader
 from src.data.make_dataset import CatDogDataset
-import wandb
 from pathlib import Path
 from torchvision import transforms
-from src.models.train_model import *
+from src.models.model import CatDogModel
+import matplotlib.pyplot as plt
+import numpy as np
 
-
-#sys.path.append("..")
-#log = logging.getLogger(__name__)
-#print = log.info
-
-
-#training_function
-def test (batch_size = 32):
-    ''' tests the neural network after training'''
-    print("_____")
-    DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = train()
-    model.to(DEVICE)
+def test (batch_size:int = 32):
+    """ 
+    tests the neural network after training 
     
-    image_size = 128
+     Parameters:
+                    batch_size (int): the size of the batch
+
+    """
+    # checking whether a CUDA-enabled GPU is available, and if so, it sets the DEVICE to "cuda" otherwise, the DEVICE is set to "cpu".
+    DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # creates an instance of the CatDogModel
+    model=CatDogModel()
+    # loading the best parameters for the model
+    checkpoint = torch.load('model_best_checkpoint.pth')
+    model.load_state_dict(checkpoint['model'])
+    model.eval()
+    # transfers the model from CPU to the device which is either GPU or CPU that was defined above
+    model.to(DEVICE)
+    image_size = model.im_size
+    # add transformations to images and converting images into tensors
     data_resize = transforms.Compose([
         transforms.Resize((image_size, image_size)),
-        transforms.ToTensor()])
-
-    test_dataset = CatDogDataset(split="test", in_folder=Path("../data/raw"), out_folder=Path('../data/processed'), transform=data_resize)
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])])
+    # processing the dataset  
+    test_dataset = CatDogDataset(split="test", in_folder=Path("../../data/raw"), out_folder=Path('../../data/processed'), transform=data_resize)
+    # loading the dataset  
     test_dataloader = DataLoader(test_dataset, batch_size = batch_size, shuffle=True)
-    correct=0
-    for i, (images, labels) in enumerate(test_dataloader):
-        output = model(images)
-        preds = torch.argmax(output,dim=1)
-        correct = correct + (preds==labels).sum()
-
-    test_accuracy = correct/(batch_size*len(labels))
-    print(int(correct))
-    print("accuracy = {i}".format(i=test_accuracy))
-
-        #wandb.log({
-            #'epoch': epoch, 
-            #'train_acc': train_acc,
-            #'train_loss': train_loss, 
-            #'val_acc': val_acc, 
-            #'val_loss': val_loss
-        #})
-
-        #print('Average loss for epoch : {i}'.format(i=total_loss/len(train_loader)))
-    
-    return model  
+    nb_test_samples=0
+    test_accuracy = 0
+    for i,(images, labels) in enumerate(test_dataloader) :
+        print(f"test step {i}")
+        outputs = model(images)
+        _, preds = torch.max(outputs, dim=1)
+        test_accuracy+=torch.sum(preds==labels)
+        nb_test_samples += preds.shape[0]
+    test_accuracy = test_accuracy /nb_test_samples
+    print(f"test accuracy : {test_accuracy}")
+    model.eval()
+    samples, labels = next(iter(test_dataloader))
+    outputs = model(samples)
+    _, preds = torch.max(outputs, dim=1)
+    class_labels = {0: "cat", 1: "dog"}
+    # create a figure with a grid of subplots
+    fig, axs = plt.subplots(4, 8, figsize=(20, 10))
+    fig.set_size_inches(15,8)
+    axs = axs.ravel()
+    # loop through each image in the tensor
+    for i in range(samples.shape[0]):
+        # extract the current image
+        img = samples[i]
+        img = np.transpose(img, (1, 2, 0))
+        # plot the image in the current subplot
+        axs[i].imshow(img)
+        # add a title to the image
+        axs[i].set_title(f"predicted as {class_labels[int(preds[i])]}")
+        # turn off axis labels
+        axs[i].axis('off')
+    # show the plot
+    plt.show()
 
 if __name__ == "__main__":
     test()
