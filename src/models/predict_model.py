@@ -38,7 +38,7 @@ def test (batch_size = 32):
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])])
 
-    test_dataset = CatDogDataset(split="test", in_folder=Path("../data/raw"), out_folder=Path('../data/processed'), transform=data_resize)
+    test_dataset = CatDogDataset(split="test", in_folder=Path("../../data/raw"), out_folder=Path('../../data/processed'), transform=data_resize)
     test_dataloader = DataLoader(test_dataset, batch_size = batch_size, shuffle=True)
     nb_test_samples=0
     test_accuracy = 0

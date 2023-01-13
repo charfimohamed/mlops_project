@@ -51,8 +51,8 @@ def train (batch_size = 32, epochs = 5, lr = 0.001, optimizer_name='adam'):
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])])
 
-    train_dataset = CatDogDataset(split="train", in_folder=Path("../data/raw"), out_folder=Path('../data/processed'), transform=data_resize)
-    validation_dataset = CatDogDataset(split="validation", in_folder=Path("../data/raw"), out_folder=Path('../data/processed'), transform=data_resize)
+    train_dataset = CatDogDataset(split="train", in_folder=Path("../../data/raw"), out_folder=Path('../../data/processed'), transform=data_resize)
+    validation_dataset = CatDogDataset(split="validation", in_folder=Path("../../data/raw"), out_folder=Path('../../data/processed'), transform=data_resize)
     train_dataloader = DataLoader(train_dataset, batch_size = batch_size, shuffle=True)
     validation_dataloader = DataLoader(validation_dataset, batch_size = batch_size, shuffle=True)
     if(optimizer_name=='sgd'):
