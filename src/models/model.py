@@ -1,14 +1,14 @@
-import torch
-from pytorch_lightning import LightningModule
-from torch import nn, optim
-import timm
-from torch.utils.data import Dataset,dataloader
-import numpy as np
 import os
+
 import matplotlib as plt
+import numpy as np
+import timm
+import torch
 import torch.nn.functional as F
 import torchvision
-
+from pytorch_lightning import LightningModule
+from torch import nn, optim
+from torch.utils.data import Dataset, dataloader
 
 
 class CatDogModel(nn.Module):

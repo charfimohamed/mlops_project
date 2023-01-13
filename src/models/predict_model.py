@@ -1,19 +1,19 @@
 import logging
 import os
 import sys
+from pathlib import Path
 
 #import hydra
 import torch
 import torch.nn as nn
+import wandb
 from torch.optim import Adam
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader, Dataset
+from torchvision import transforms
+
 from src.data import make_dataset
 from src.data.make_dataset import CatDogDataset
-import wandb
-from pathlib import Path
-from torchvision import transforms
 from src.models.train_model import *
-
 
 #sys.path.append("..")
 #log = logging.getLogger(__name__)

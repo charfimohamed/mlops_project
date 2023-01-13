@@ -1,24 +1,24 @@
 import logging
 import os
-import sys
-import timm
-#import hydra
-import wandb
 import pprint
-import torch
-import torch.nn as nn
-from torch.optim import Adam
-from torch.optim import SGD
-
-from torch.utils.data import Dataset, DataLoader
-from src.models.model import CatDogModel
-from src.data import make_dataset
-from src.data.make_dataset import CatDogDataset
+import sys
 from pathlib import Path
-from torchvision import transforms
-from pytorch_lightning import Trainer
+
 import matplotlib.pyplot as plt
 import numpy as np
+import timm
+import torch
+import torch.nn as nn
+#import hydra
+import wandb
+from pytorch_lightning import Trainer
+from torch.optim import SGD, Adam
+from torch.utils.data import DataLoader, Dataset
+from torchvision import transforms
+
+from src.data import make_dataset
+from src.data.make_dataset import CatDogDataset
+from src.models.model import CatDogModel
 
 #sys.path.append("..")
 log = logging.getLogger(__name__)
