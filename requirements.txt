@@ -20,7 +20,7 @@ timm
 pytorch-lightning
 isort
 black
-
+pytest
 
 markdown
 jupyter
