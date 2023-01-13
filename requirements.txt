@@ -18,7 +18,8 @@ scikit-learn
 pillow
 timm
 pytorch-lightning
-
+isort
+black
 
 
 markdown
