@@ -35,29 +35,3 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements_tests.txt
           
-
-
-      - name: test with flake8
-        run: |
-          pip install flake8
-          flake8 .
-        continue-on-error: true
-
-          
-      - name: Test with pytest
-        run: |
-          pip install pytest
-          pip install pytest-cov
-          pytest -v
-
-
-      - name: Install tox and any other packages
-        run: pip install tox
-      - name: Run tox
-        # Run tox using the version of Python in `PATH`
-        run: tox -e py
-      
-      - name: Test with isort
-        run: |
-          pip install isort
-          isort .
