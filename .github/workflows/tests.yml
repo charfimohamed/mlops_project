@@ -1,7 +1,7 @@
 name: testing
 
 on: 
-  pull_requests:
+  pull_request:
     branches: [ master, main , aziz2]
   push:
     branches: [ master, main ] 
