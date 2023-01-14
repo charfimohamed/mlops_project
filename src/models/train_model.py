@@ -71,10 +71,9 @@ def train (batch_size:int = 32, epochs:int = 5, lr:float = 0.0005, optimizer_nam
         train_accuracy = 0.0 
         train_loss = 0.0 
         validation_accuracy = 0.0
-        nb_train_samples = 0
-        nb_valid_samples = 0
         for i,(images, labels) in enumerate(train_dataloader) :
             print(f" train step {i}")
+            print(len(train_dataset))
             outputs = model(images)
             optimizer.zero_grad()
             loss = loss_fn(outputs, labels)
@@ -83,9 +82,8 @@ def train (batch_size:int = 32, epochs:int = 5, lr:float = 0.0005, optimizer_nam
             _, preds = torch.max(outputs, dim=1)
             train_loss+= loss
             train_accuracy+=torch.sum(preds==labels)
-            nb_train_samples += preds.shape[0]
-        train_loss = train_loss / nb_train_samples
-        train_accuracy = train_accuracy /nb_train_samples
+        train_loss = train_loss / len(train_dataset)
+        train_accuracy = train_accuracy /len(train_dataset)
         print(f"Epoch {epoch+1}/{epochs}. Loss: {train_loss} . accuracy : {train_accuracy}")
         model.eval()
         for i,(images, labels) in enumerate(validation_dataloader) :
@@ -93,8 +91,7 @@ def train (batch_size:int = 32, epochs:int = 5, lr:float = 0.0005, optimizer_nam
             outputs = model(images)
             _, preds = torch.max(outputs, dim=1)
             validation_accuracy+=torch.sum(preds==labels)
-            nb_valid_samples += preds.shape[0]
-        validation_accuracy = validation_accuracy /nb_valid_samples
+        validation_accuracy = validation_accuracy /len(validation_dataset)
         print(f"validation accuracy : {validation_accuracy}")
         if(validation_accuracy>best_accuracy):
             best_accuracy=validation_accuracy

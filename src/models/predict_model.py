@@ -35,15 +35,13 @@ def test (batch_size:int = 32):
     test_dataset = CatDogDataset(split="test", in_folder=Path("../../data/raw"), out_folder=Path('../../data/processed'), transform=data_resize)
     # loading the dataset  
     test_dataloader = DataLoader(test_dataset, batch_size = batch_size, shuffle=True)
-    nb_test_samples=0
     test_accuracy = 0
     for i,(images, labels) in enumerate(test_dataloader) :
         print(f"test step {i}")
         outputs = model(images)
         _, preds = torch.max(outputs, dim=1)
         test_accuracy+=torch.sum(preds==labels)
-        nb_test_samples += preds.shape[0]
-    test_accuracy = test_accuracy /nb_test_samples
+    test_accuracy = test_accuracy /len(test_dataset)
     print(f"test accuracy : {test_accuracy}")
     model.eval()
     samples, labels = next(iter(test_dataloader))

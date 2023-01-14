@@ -11,5 +11,7 @@ class CatDogModel(nn.Module):
         self.im_size = 16
 
     def forward(self, x):
+        if x.ndim != 4:
+            raise ValueError('Expected input to a 4D tensor')
         x = self.model(x)
         return x
