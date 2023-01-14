@@ -1,0 +1,64 @@
+name: testing
+
+on: 
+  pull_requests:
+    branches: [ master, main ]
+  push:
+    branches: [ master, main ] 
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python-version: ["3.9.13", "3.9.7"]
+        os: ["macOS-12.6", "macOS-13.0.1", "ubuntu-22.04.1", "Windows-10.0.19044.2251"]
+
+    steps:
+      - name: Checkout
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      # You can test your matrix by printing the current Python version
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
+
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip 
+          pip install flake8 pytest
+          pip install -r requirements.txt
+          pip install -r requirements_tests.txt
+          
+
+
+      - name: test with flake8
+        run: |
+          pip install flake8
+          flake8 .
+        continue-on-error: true
+
+          
+      - name: Test with pytest
+        run: |
+          pip install pytest
+          pip install pytest-cov
+          pytest -v
+
+
+      - name: Install tox and any other packages
+        run: pip install tox
+      - name: Run tox
+        # Run tox using the version of Python in `PATH`
+        run: tox -e py
+      
+
+      - name: Test with isort
+      run: |
+        pip install isort
+        isort .
