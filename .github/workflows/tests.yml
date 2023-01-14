@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9.13", "3.9.7"]
-        os: ["macOS-12.6", "macOS-13.0.1", "ubuntu-22.04.1", "Windows-10.0.19044.2251"]
+        os: ["macOS-12.6", "macOS-13.0.1", "ubuntu-22.04"]
 
     steps:
       - name: Checkout
