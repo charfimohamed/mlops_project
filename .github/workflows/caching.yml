@@ -1,10 +1,10 @@
 name: " Caching "
 
 on: 
-  pull_request:
-    branches: [ master, main , aziz3]
-  push:
-    branches: [ master, main , aziz3] 
+  #pull_request:
+    #branches: [ master, main , aziz3]
+  #push:
+    #branches: [ master, main , aziz3] 
       
 
 
