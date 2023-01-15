@@ -1,6 +1,8 @@
-name: "flake8 test"
+name: " flake8 test "
 
 on: 
+  pull_request:
+    branches: [ master, main , aziz2]
   push:
     branches: [ master, main , aziz2] 
 
