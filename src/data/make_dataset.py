@@ -1,4 +1,3 @@
-# flake8: no-import-below-top-level
 # -*- coding: utf-8 -*-
 import logging
 import os
