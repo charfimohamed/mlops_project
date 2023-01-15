@@ -1,0 +1,36 @@
+name: " isort test "
+
+on: 
+  pull_request:
+    branches: [ master, main , aziz2]
+  push:
+    branches: [ master, main , aziz2] 
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+        os: ["macOS-12.6", "macOS-13.0.1"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      # You can test your matrix by printing the current Python version
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
+      - name: Install dependencies
+        run: |
+          pip install isort
+
+
+      - name: Test isort
+        run: |
+          isort .

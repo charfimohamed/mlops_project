@@ -1,0 +1,56 @@
+name: " Caching "
+
+on: 
+  pull_request:
+    branches: [ master, main , aziz2]
+  push:
+    branches: [ master, main , aziz2] 
+      
+
+
+
+jobs:
+  build:
+    runs-on: macOs-latest
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+        os: ["macOS-12.6", "macOS-13.0.1"]
+
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+
+      - name: Caching 
+        id: cache-npm
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ matrix.python-version }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: List the state of node modules
+        continue-on-error: true
+        run: npm list
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
