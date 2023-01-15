@@ -14,9 +14,9 @@ from sklearn.model_selection import train_test_split
 from torch.utils.data import Dataset
 from torchvision import transforms
 
+class CatDogDataset(Dataset):       
+    def __init__(self, split:str, in_folder: str, out_folder: str, transform=None):
 
-class CatDogDataset(Dataset):
-    def __init__(self, split, in_folder, out_folder, transform=None):
         super().__init__()
 
         self.in_folder = in_folder
@@ -33,8 +33,8 @@ class CatDogDataset(Dataset):
         self.category = self.df["category"].values
 
         self.transform = transform
-
-    def download_raw_data(self, download_path):
+        
+    def download_raw_data(self, download_path:Path):
         """
         Downloads raw data from Kaggle.
         Make sure to setup your access token using https://adityashrm21.github.io/Setting-Up-Kaggle/

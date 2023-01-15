@@ -1,8 +1,0 @@
-wandb_version: 1
-
-batch_size:
-  value: 16
-lr:
-  value: 0.00046353484484221906
-optimizer:
-  value: adam

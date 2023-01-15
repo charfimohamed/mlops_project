@@ -1,65 +1,68 @@
 import logging
-import os
-import pprint
-import sys
-from pathlib import Path
-
-import matplotlib.pyplot as plt
-import numpy as np
-import timm
 import torch
-import torch.nn as nn
-#import hydra
-import wandb
-from pytorch_lightning import Trainer
-from torch.optim import SGD, Adam
-from torch.utils.data import DataLoader, Dataset
-from torchvision import transforms
-
-from src.data import make_dataset
-from src.data.make_dataset import CatDogDataset
+from torch.optim import Adam
+from torch.optim import SGD
+from torch.utils.data import DataLoader
 from src.models.model import CatDogModel
+from src.data.make_dataset import CatDogDataset
+from pathlib import Path
+from torchvision import transforms
+import os
 
-#sys.path.append("..")
 log = logging.getLogger(__name__)
-#print = log.info
 
+def save_checkpoint(model: CatDogModel ,best_accuracy:float):
+    """ saving the best model 
+    
+     Parameters:
+                    model (CatDogModel): the used model
+                    best_accuracy (float): the best accuracy to be saved 
 
-def save_checkpoint(model,epoch,best_accuracy):
+    """
     print("------> saving checkpoint <------")
     state = {
-    'epoch': epoch + 1,
     'model' : model.state_dict(),
     'best accuracy': best_accuracy,
     }
-    torch.save (state, 'model_best_checkpoint.pth')
+    if not os.path.exists('checkpoints'):
+        os.mkdir('checkpoints')
+    torch.save (state, 'checkpoints/model_best_checkpoint.pth')
 
-def train_hp():
-    wandb.init(project="test-project", entity="group18_mlops")
-    train(batch_size=wandb.config.batch_size, epochs=5, lr=wandb.config.lr,optimizer_name=wandb.config.optimizer)
+def train (batch_size:int = 32, epochs:int = 5, lr:float = 0.0005, optimizer_name : str ='adam')->CatDogModel:
+    """ 
+    Train the dataset
+    
+     Parameters:
+                    batch_size (int): the size of the batch
+                    epochs (int): the number of epochs
+                    lr (float): the learning rate
+                    optimizer_name (str): the name of the optimizer
 
-#training_function
-def train (batch_size = 32, epochs = 5, lr = 0.001, optimizer_name='adam'):
-    ''' Trains a neural network from the TIMM framework'''
-    #DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    #model = CatDogModel()
-    #model.to(DEVICE)
+            Returns:
+                    model (CatDogModel): the training model
+    """
+    # checking whether a CUDA-enabled GPU is available, and if so, it sets the DEVICE to "cuda" otherwise, the DEVICE is set to "cpu".
+    DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # creates an instance of the CatDogModel
     model = CatDogModel()
+    # transfers the model from CPU to the device which is either GPU or CPU that was defined above
+    model.to(DEVICE)
     image_size = model.im_size
+    # add transformations to images and converting images into tensors
     data_resize = transforms.Compose([
         transforms.Resize((image_size, image_size)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])])
-
+    # processing the dataset
     train_dataset = CatDogDataset(split="train", in_folder=Path("../../data/raw"), out_folder=Path('../../data/processed'), transform=data_resize)
     validation_dataset = CatDogDataset(split="validation", in_folder=Path("../../data/raw"), out_folder=Path('../../data/processed'), transform=data_resize)
+    # loading the dataset
     train_dataloader = DataLoader(train_dataset, batch_size = batch_size, shuffle=True)
     validation_dataloader = DataLoader(validation_dataset, batch_size = batch_size, shuffle=True)
     if(optimizer_name=='sgd'):
         optimizer = SGD(model.parameters(),lr=lr)
     if(optimizer_name=='adam'):
         optimizer = Adam(model.parameters(),lr=lr)
-
     loss_fn = torch.nn.CrossEntropyLoss()
     best_accuracy = 0.0 # accuracy of the best epoch to know what wights to save 
     for epoch in range(epochs):
@@ -68,10 +71,9 @@ def train (batch_size = 32, epochs = 5, lr = 0.001, optimizer_name='adam'):
         train_accuracy = 0.0 
         train_loss = 0.0 
         validation_accuracy = 0.0
-        nb_train_samples = 0
-        nb_valid_samples = 0
         for i,(images, labels) in enumerate(train_dataloader) :
             print(f" train step {i}")
+            print(len(train_dataset))
             outputs = model(images)
             optimizer.zero_grad()
             loss = loss_fn(outputs, labels)
@@ -80,9 +82,8 @@ def train (batch_size = 32, epochs = 5, lr = 0.001, optimizer_name='adam'):
             _, preds = torch.max(outputs, dim=1)
             train_loss+= loss
             train_accuracy+=torch.sum(preds==labels)
-            nb_train_samples += preds.shape[0]
-        train_loss = train_loss / nb_train_samples
-        train_accuracy = train_accuracy /nb_train_samples
+        train_loss = train_loss / len(train_dataset)
+        train_accuracy = train_accuracy /len(train_dataset)
         print(f"Epoch {epoch+1}/{epochs}. Loss: {train_loss} . accuracy : {train_accuracy}")
         model.eval()
         for i,(images, labels) in enumerate(validation_dataloader) :
@@ -90,44 +91,13 @@ def train (batch_size = 32, epochs = 5, lr = 0.001, optimizer_name='adam'):
             outputs = model(images)
             _, preds = torch.max(outputs, dim=1)
             validation_accuracy+=torch.sum(preds==labels)
-            nb_valid_samples += preds.shape[0]
-        validation_accuracy = validation_accuracy /nb_valid_samples
+        validation_accuracy = validation_accuracy /len(validation_dataset)
         print(f"validation accuracy : {validation_accuracy}")
         if(validation_accuracy>best_accuracy):
             best_accuracy=validation_accuracy
-            save_checkpoint(model,epoch,best_accuracy)
-
-        wandb.log({
-        'train_acc': train_accuracy,
-        'validation_acc': validation_accuracy,
-        'best_accuracy':best_accuracy,
-        'train_loss': train_loss,}) 
-    return model  
+            save_checkpoint(model,best_accuracy)
+    return model
            
 
 if __name__ == "__main__":
-
-    sweep_configuration = {
-    'method': 'random',
-    'name': 'sweep',
-    'metric': {'goal': 'maximize', 'name': 'best_accuracy'},
-    'parameters': 
-     {
-        'batch_size': {'values': [16, 32, 64]},
-        'lr': {'max': 0.001, 'min': 0.0001},
-        'optimizer': {'values': ['adam', 'sgd']}
-
-     }
-    }
-    pprint.pprint(sweep_configuration)
-
-    # Create a sweep
-    sweep_id = wandb.sweep(sweep_configuration, project="group18_mlops")
-   
-    
-    #train()  # training function call
-        
-    # Run the sweep
-    wandb.agent(sweep_id, function=train_hp, count=4)
-
-    wandb.finish()
+    train()
