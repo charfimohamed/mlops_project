@@ -26,7 +26,11 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
-      - name: Test isort
+      - name: Install dependencies
         run: |
           pip install isort
+
+
+      - name: Test isort
+        run: |
           isort .

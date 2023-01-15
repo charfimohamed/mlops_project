@@ -26,8 +26,12 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
-      - name: test with flake8
+      - name: Install dependencies
         run: |
           pip install flake8
+
+ 
+      - name: test with flake8
+        run: |
           flake8 .
         continue-on-error: true
