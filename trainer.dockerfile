@@ -12,6 +12,7 @@ COPY setup.py setup.py
 COPY src/ src/
 COPY data/ data/
 COPY src/models/checkpoints/ checkpoints/
+COPY .env .env
 
 
 # set the working directory in our container and add commands that install the dependencies
