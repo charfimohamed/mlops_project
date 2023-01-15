@@ -15,8 +15,8 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 
 
-class CatDogDataset(Dataset):       
-    def __init__(self, split:str, in_folder: str, out_folder: str, transform=None):
+class CatDogDataset(Dataset):
+    def __init__(self, split: str, in_folder: str, out_folder: str, transform=None):
 
         super().__init__()
 
@@ -34,16 +34,14 @@ class CatDogDataset(Dataset):
         self.category = self.df["category"].values
 
         self.transform = transform
-        
-    def download_raw_data(self, download_path:Path):
+
+    def download_raw_data(self, download_path: Path):
         """
         Downloads raw data from Kaggle.
         Make sure to setup your access token using https://adityashrm21.github.io/Setting-Up-Kaggle/
         """
         kaggle.api.authenticate()
-        kaggle.api.dataset_download_files(
-            "alifrahman/dataset-for-wbc-classification", path=download_path, unzip=True
-        )
+        kaggle.api.dataset_download_files("alifrahman/dataset-for-wbc-classification", path=download_path, unzip=True)
 
     def prepare_dataframe(self, split):
         categories = []
@@ -94,9 +92,7 @@ class CatDogDataset(Dataset):
 
     def __getitem__(self, idx):
         folder = "train" if self.split == "train" else "validation"
-        img = PIL.Image.open(
-            self.in_folder / "data" / folder / self.category[idx] / self.file_names[idx]
-        )
+        img = PIL.Image.open(self.in_folder / "data" / folder / self.category[idx] / self.file_names[idx])
 
         if self.transform:
             img = self.transform(img)
@@ -118,9 +114,7 @@ def main(input_filepath, output_filepath):
     logger.info("making final data set from raw data")
 
     image_size = 224
-    data_resize = transforms.Compose(
-        [transforms.Resize((image_size, image_size)), transforms.ToTensor()]
-    )
+    data_resize = transforms.Compose([transforms.Resize((image_size, image_size)), transforms.ToTensor()])
 
     train_dataset = CatDogDataset(
         split="train",
@@ -140,6 +134,9 @@ def main(input_filepath, output_filepath):
         out_folder=output_filepath,
         transform=data_resize,
     )
+    print(f"train dataset size is : {len(train_dataset)}")
+    print(f"validation dataset size is : {len(validation_dataset)}")
+    print(f"test dataset size is : {len(test_dataset)}")
 
 
 if __name__ == "__main__":
