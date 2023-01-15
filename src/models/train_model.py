@@ -86,7 +86,6 @@ def train(batch_size: int = 32, epochs: int = 5, lr: float = 0.0005, optimizer_n
         validation_accuracy = 0.0
         for i, (images, labels) in enumerate(train_dataloader):
             print(f" train step {i}")
-            print(len(train_dataset))
             outputs = model(images)
             optimizer.zero_grad()
             loss = loss_fn(outputs, labels)
