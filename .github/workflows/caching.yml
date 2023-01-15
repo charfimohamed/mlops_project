@@ -1,5 +1,10 @@
 name: Caching
-on: push
+on:
+  push:
+    branches: [ master, main , aziz2]
+
+
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -29,9 +34,9 @@ jobs:
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
           path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/requirements*.txt') }}
+          key: ${{ runner.os }}-build-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-${{ matrix.python-version }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
