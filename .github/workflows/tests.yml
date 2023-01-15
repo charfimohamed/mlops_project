@@ -56,6 +56,13 @@ jobs:
           pytest -v
 
 
+      - name: Test with pytest and generate report
+        run: |
+          coverage run --source=./src -m pytest tests/
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v2    
+
+
       - name: Install tox and any other packages
         run: pip install tox
       - name: Run tox
