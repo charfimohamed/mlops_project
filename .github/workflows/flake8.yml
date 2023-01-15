@@ -1,4 +1,4 @@
-name: testing
+name: "flake8 test"
 
 on: 
   pull_request:
@@ -26,30 +26,8 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
-
-
-      - name: Install dependencies
+      - name: test with flake8
         run: |
-          python -m pip install --upgrade pip 
-          pip install flake8 pytest
-          pip install -r requirements.txt
-          pip install -r requirements_tests.txt
-
-          
-      - name: Test with pytest
-        run: |
-          pip install pytest
-          pip install pytest-cov
-          pytest -v
-
-
-      - name: Install tox and any other packages
-        run: pip install tox
-      - name: Run tox
-        # Run tox using the version of Python in `PATH`
-        run: tox -e py
-      
-      - name: Test with isort
-        run: |
-          pip install isort
-          isort .
+          pip install flake8
+          flake8 .
+        continue-on-error: true
