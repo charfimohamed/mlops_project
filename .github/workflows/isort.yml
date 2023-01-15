@@ -9,10 +9,10 @@ on:
 jobs:
   build:
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9.13", "3.9.7"]
+        python-version: ["3.9"]
         os: ["macOS-12.6", "macOS-13.0.1"]
 
     steps:
