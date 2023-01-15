@@ -1,12 +1,14 @@
 
-import torch
-from torch.utils.data import DataLoader
-from src.data.make_dataset import CatDogDataset
 from pathlib import Path
-from torchvision import transforms
-from src.models.model import CatDogModel
+
 import matplotlib.pyplot as plt
 import numpy as np
+import torch
+from torch.utils.data import DataLoader
+from torchvision import transforms
+
+from src.data.make_dataset import CatDogDataset
+from src.models.model import CatDogModel
 
 
 def test (batch_size:int = 32):

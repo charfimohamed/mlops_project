@@ -1,13 +1,14 @@
 import logging
-import torch
-from torch.optim import Adam
-from torch.optim import SGD
-from torch.utils.data import DataLoader
-from src.models.model import CatDogModel
-from src.data.make_dataset import CatDogDataset
-from pathlib import Path
-from torchvision import transforms
 import os
+from pathlib import Path
+
+import torch
+from torch.optim import SGD, Adam
+from torch.utils.data import DataLoader
+from torchvision import transforms
+
+from src.data.make_dataset import CatDogDataset
+from src.models.model import CatDogModel
 
 log = logging.getLogger(__name__)
 

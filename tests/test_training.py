@@ -1,11 +1,10 @@
-from pathlib import Path
-import pytest
-from src.models.model import CatDogModel
-import torch
 import os
+from pathlib import Path
 
+import pytest
+import torch
 
-
+from src.models.model import CatDogModel
 
 project_dir = Path(__file__).resolve().parents[1]
 checkpoint_path = os.path.join(project_dir, 'src/models/checkpoints/model_best_checkpoint.pth')

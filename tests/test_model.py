@@ -1,7 +1,9 @@
 from pathlib import Path
+
 import pytest
-from src.models.model import CatDogModel
 import torch
+
+from src.models.model import CatDogModel
 
 project_dir = Path(__file__).resolve().parents[1]
 

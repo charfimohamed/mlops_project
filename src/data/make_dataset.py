@@ -14,6 +14,7 @@ from sklearn.model_selection import train_test_split
 from torch.utils.data import Dataset
 from torchvision import transforms
 
+
 class CatDogDataset(Dataset):       
     def __init__(self, split:str, in_folder: str, out_folder: str, transform=None):
 

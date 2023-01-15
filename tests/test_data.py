@@ -1,11 +1,11 @@
+import os.path
 from pathlib import Path
 
-import os.path
 import pytest
 from torchvision import transforms
+
 from src.data.make_dataset import CatDogDataset
 from src.models.model import CatDogModel
-
 
 project_dir = Path(__file__).resolve().parents[1]
 model = CatDogModel()

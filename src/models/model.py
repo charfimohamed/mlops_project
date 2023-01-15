@@ -1,5 +1,6 @@
-from torch import nn
 import torchvision
+from torch import nn
+
 
 class CatDogModel(nn.Module):
     """ defines a neural network model """
