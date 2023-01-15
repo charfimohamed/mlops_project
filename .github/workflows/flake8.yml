@@ -2,9 +2,9 @@ name: " flake8 test "
 
 on: 
   pull_request:
-    branches: [ master, main , aziz2]
+    branches: [ master, main , aziz3]
   push:
-    branches: [ master, main , aziz2] 
+    branches: [ master, main , aziz3] 
 
 jobs:
   build:
