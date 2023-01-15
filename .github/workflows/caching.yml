@@ -16,6 +16,7 @@ jobs:
       matrix:
         python-version: ["3.9"]
         os: ["macOS-12.6", "macOS-13.0.1"]
+        pytorch-version: ["1.11.0", "1.12.0"]
 
 
     steps:
@@ -35,9 +36,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ matrix.os }}-py${{ matrix.python-version }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ matrix.os }}-py${{ matrix.python-version }}-pt${{ matrix.pytorch-version }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            ${{ matrix.os }}-py${{ matrix.python-version }}-pip-
+            ${{ matrix.os }}-py${{ matrix.python-version }}-pt${{ matrix.pytorch-version }}-pip-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
