@@ -1,3 +1,4 @@
+
 import torch
 from torch.utils.data import DataLoader
 from src.data.make_dataset import CatDogDataset
@@ -6,6 +7,7 @@ from torchvision import transforms
 from src.models.model import CatDogModel
 import matplotlib.pyplot as plt
 import numpy as np
+
 
 def test (batch_size:int = 32):
     """ 
@@ -31,6 +33,7 @@ def test (batch_size:int = 32):
         transforms.Resize((image_size, image_size)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])])
+
     # processing the dataset  
     test_dataset = CatDogDataset(split="test", in_folder=Path("../../data/raw"), out_folder=Path('../../data/processed'), transform=data_resize)
     # loading the dataset  
