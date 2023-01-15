@@ -9,11 +9,11 @@ on:
 jobs:
   build:
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.9"]
-        os: ["macOS-12.6"]
+        os: [macOS-12.6, macOS-13.0.1]
 
     steps:
       - name: Checkout
