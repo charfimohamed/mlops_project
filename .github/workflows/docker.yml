@@ -1,0 +1,49 @@
+name: Docker Image CI
+
+on: 
+  pull_request:
+    branches: [ master, main , aziz3]
+  push:
+    branches: [ master, main , aziz3]
+
+jobs:
+  build:
+    runs-on: macOs-latest
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+        os: ["macOS-12.6", "macOS-13.0.1"]
+        pytorch-version: ["1.11.0", "1.12.0"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ matrix.os }}-py${{ matrix.python-version }}-pt${{ matrix.pytorch-version }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ matrix.os }}-py${{ matrix.python-version }}-pt${{ matrix.pytorch-version }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch==${{ matrix.pytorch-version }}
+          pip install -r requirements.txt
+
+
+      - name: docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: docker image
+        run: |
+          echo "$" | docker login \
+            -u "$" --password-stdin docker.io
+          docker build . --file ./trainer.dockerfile \
+            --tag docker.io/$/$:$GITHUB_SHA
+          docker push docker.io/$/$:$GITHUB_SHA
