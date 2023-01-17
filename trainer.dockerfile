@@ -10,7 +10,6 @@ RUN apt update && \
 COPY requirements.txt requirements.txt
 COPY setup.py setup.py
 COPY src/ src/
-COPY data/ data/
 COPY src/models/checkpoints/ checkpoints/
 COPY .env .env
 
