@@ -99,12 +99,12 @@ def train(batch_size: int = 32, epochs: int = 5, lr: float = 0.0005, optimizer_n
         print(f"Epoch {epoch+1}/{epochs}. Loss: {train_loss} . accuracy : {train_accuracy}")
         model.eval()
         for i, (images, labels) in enumerate(validation_dataloader):
-            print(f"validation step {i}")
+            print(f"validation step is {i}")
             outputs = model(images)
             _, preds = torch.max(outputs, dim=1)
             validation_accuracy += torch.sum(preds == labels)
         validation_accuracy = validation_accuracy / len(validation_dataset)
-        print(f"validation accuracy : {validation_accuracy}")
+        print(f"validation accuracy is : {validation_accuracy}")
         if validation_accuracy > best_accuracy:
             best_accuracy = validation_accuracy
             save_checkpoint(model, best_accuracy)
