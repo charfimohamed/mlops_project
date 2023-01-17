@@ -17,4 +17,6 @@ fastapi==0.89.1
 uvicorn
 opencv-python-headless
 python-multipart
+dvc
+dvc[all]
 # add anything else you application needs to be able to run
