@@ -105,7 +105,7 @@ end of the project.
 >
 > Answer:
 
---- question 1 fill here ---
+18
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -116,7 +116,7 @@ end of the project.
 >
 > Answer:
 
---- question 2 fill here ---
+s174447, s221586, s221551
 
 ### Question 3
 > **What framework did you choose to work with and did it help you complete the project?**
@@ -129,7 +129,7 @@ end of the project.
 >
 > Answer:
 
---- question 3 fill here ---
+Initially, we were planning to use PyTorch Image Models framework and to use the pre-trained Inception ResNet v2 model and fine tune it in order to do classification of cats and dogs. However, changing the model achitecture was harder than we have expected and we could not get it to work. Upon consulting with the TAs and Nicki, we switched to torchvision framework. We have used the built in pre trained torchvision resnet50 model. In order for it to work with the binary classification task in our project, we have changed the last fully connected layer to output only two features.
 
 ## Coding environment
 
@@ -148,7 +148,27 @@ end of the project.
 >
 > Answer:
 
---- question 4 fill here ---
+We have used `conda` to create the local python environment and made use of `pip` and `requirements.txt` file for installing and tracking the dependencies. In order to create the list of dependencies we used `pipreqs` package to automatically scan our project. To get a complete copy of our development environment, one should:
+
+
+1. Clone the repo:
+```
+git clone https://github.com/charfimohamed/mlops_project
+cd mlops_project
+```
+2. Create a new `conda` environment:
+```
+conda create -n mlops_project python=3.9
+conda activate mlops_project
+```
+3. Install the dependencies
+```
+pip install -r requirements.txt
+```
+4. Either set up [Kaggle API](https://adityashrm21.github.io/Setting-Up-Kaggle/) on their local machine and run `make data` or 
+```
+dvc pull
+```
 
 ### Question 5
 
