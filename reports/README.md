@@ -229,7 +229,21 @@ In total we have implemented 12 tests. For the data part we are testing the trai
 >
 > Answer:
 
---- question 8 fill here ---
+The total code coverage is 88% and can be seen in the table below. Only the `make_dataset.py` file was not fully covered and it was the Kaggle API authentication/data download part and the main function. Even though the coverage is quite high, it does not ensure that the code is error free, because we have likely not tested all of the possible edge cases. 
+Name                       Stmts   Miss  Cover   Missing
+--------------------------------------------------------
+src/__init__.py                0      0   100%
+src/data/__init__.py           0      0   100%
+src/data/make_dataset.py     101     25    75%   33-34, 49-50, 94, 118-145, 149-162
+src/models/__init__.py         0      0   100%
+src/models/model.py           14      0   100%
+tests/__init__.py              4      0   100%
+tests/test_data.py            49      0   100%
+tests/test_model.py           15      0   100%
+tests/test_training.py        19      0   100%
+--------------------------------------------------------
+TOTAL                        202     25    88%
+
 
 ### Question 9
 
@@ -244,7 +258,7 @@ In total we have implemented 12 tests. For the data part we are testing the trai
 >
 > Answer:
 
---- question 9 fill here ---
+Our workflow did include the use of branches and pull requests. Early in the project we made use of branches. Each member worked on a separate branch for every bigger feature in the project. This allowed us to make use of pull requests and review the code before it was merged into the main branch. Additionally, it made it much easier to resolve merge conflicts and work remotely. However, when a change was minor and all members were aware of it, we have sometimes skipped the process of creating a new branch and making a pull request and pushed the code directly to the main branch.
 
 ### Question 10
 
@@ -259,7 +273,7 @@ In total we have implemented 12 tests. For the data part we are testing the trai
 >
 > Answer:
 
---- question 10 fill here ---
+Our dataset was on the smaller side (less than 3000 images) and we had a data pipeline that would download the raw data from Kaggle if it was not already present. Therefore, having data version control and the ability to pull data was not strictly necessary in our case. Despite that, we have still used DVC for managing the data. In our project, it would be beneficial in the case where the dataset in Kaggle would change or would be made private. Additionally, it makes it easier for other users to clone the project and get the data because they wont have to set up Kaggle API keys on their local machines. The same benefit applies when deploying the project inside of Docker containers.
 
 ### Question 11
 
