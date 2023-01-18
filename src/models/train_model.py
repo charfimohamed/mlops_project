@@ -31,7 +31,7 @@ def save_checkpoint(model: CatDogModel, best_accuracy: float):
     torch.save(state, "checkpoints/model_best_checkpoint.pth")
 
 
-def train(batch_size: int = 32, epochs: int = 5, lr: float = 0.0005, optimizer_name: str = "adam") -> CatDogModel:
+def train(batch_size: int = 64, epochs: int = 5, lr: float = 0.0005, optimizer_name: str = "adam") -> CatDogModel:
     """
     Train the dataset
 
