@@ -45,7 +45,7 @@ def main(cfg: DictConfig):
     pprint.pprint(sweep_configuration)
     # Create and run a sweep
     sweep_id = wandb.sweep(sweep_configuration, project="group18_mlops")
-    wandb.agent(sweep_id, function=train_hp, count=1)
+    wandb.agent(sweep_id, function=train_hp, count=10)
     wandb.finish()
 
 

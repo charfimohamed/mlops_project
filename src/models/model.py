@@ -10,7 +10,7 @@ class CatDogModel(nn.Module):
         self.model = torchvision.models.resnet50(pretrained=True)
         self.num_ftrs = self.model.fc.in_features
         self.model.fc = nn.Linear(self.num_ftrs, 2)
-        self.im_size = 16
+        self.im_size = 128
 
     def forward(self, x):
         if x.ndim != 4:
