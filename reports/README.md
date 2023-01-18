@@ -183,7 +183,8 @@ dvc pull
 > *experiments.*
 > Answer:
 
---- question 5 fill here ---
+We initialized our project using the coookiecutter template and tried to follow their proposed structure. Inside `data/` folder we have stored our downloaded dataset,  in `notebooks/` we have an initial data exploration jupyter notebook, `src/` (and its subfolders) contains all of our source code, including scripts to download data, model definition, 
+training, optimisation and prediction scripts. In addition to the cookiecutter template, we have added `tests/` folder that contains all of our tests, an `app/` folder that contains our FastAPI implementation. Additionally, we also have `.dvc/` and `.github` folders for storing GitHub workflows and dvc configuration. We opted not to delete the `docs/`, `models/` and `references/` folders.
 
 ### Question 6
 
@@ -194,7 +195,7 @@ dvc pull
 >
 > Answer:
 
---- question 6 fill here ---
+We try to adhere to the PEP8 standard and have used `flake8` to check for compliance. `black` was our choice for automatic code formatter and we have used `isort` in order to organize the import statements in our code. Adhering to specific formatting rules, even if they are subjectively defined, is important when working in larger project with more than one contributor because it sets a standard for the project and keeps the coding style consistent. It allows existing and new contributors to more efficiently contribute and cooperate on the codebase.
 
 ## Version control
 
@@ -213,7 +214,7 @@ dvc pull
 >
 > Answer:
 
---- question 7 fill here ---
+In total we have implemented 12 tests. For the data part we are testing the train, validation and test dataset size, whether all of the labels are present and if the image transforms work as expected. For the model we are testing wether the model outputs the correct shape, if an invalid input raises an error. For the training script we are testing if saving the model works as expected and if the accuracy is better than baseline.
 
 ### Question 8
 
