@@ -8,14 +8,14 @@ import numpy as np
 import pandas as pd
 import PIL
 from dotenv import find_dotenv, load_dotenv
+
 load_dotenv()
 
+import kaggle
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from torch.utils.data import Dataset
 from torchvision import transforms
-
-import kaggle
 
 kaggle_username = os.environ.get('KAGGLE_USERNAME')
 kaggle_key = os.environ.get('KAGGLE_KEY')

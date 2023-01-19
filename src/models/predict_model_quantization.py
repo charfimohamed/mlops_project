@@ -1,13 +1,15 @@
+import time
 from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+import torch.quantization
 from torch.utils.data import DataLoader
 from torchvision import transforms
+
 from src.data.make_dataset import CatDogDataset
 from src.models.model import CatDogModel
-import torch.quantization
-import time
 
 
 def test(batch_size: int = 32):

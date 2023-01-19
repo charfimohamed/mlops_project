@@ -1,3 +1,4 @@
+import time
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -8,8 +9,6 @@ from torchvision import transforms
 
 from src.data.make_dataset import CatDogDataset
 from src.models.model import CatDogModel
-
-import time
 
 
 def test(batch_size: int = 32):

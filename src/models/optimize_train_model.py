@@ -5,13 +5,13 @@ from pathlib import Path
 
 import hydra
 import torch
+import wandb
 from omegaconf import DictConfig
 from torch.optim import SGD, Adam
 from torch.profiler import ProfilerActivity, profile, record_function
 from torch.utils.data import DataLoader
 from torchvision import transforms
 
-import wandb
 from src.data.make_dataset import CatDogDataset
 from src.models.model import CatDogModel
 

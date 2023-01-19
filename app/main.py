@@ -1,12 +1,13 @@
-from fastapi import FastAPI
 from http import HTTPStatus
-import torch
-from src.models.model import CatDogModel
-from fastapi import UploadFile, File
-import cv2
-from torchvision import transforms
 from pathlib import Path
+
+import cv2
+import torch
+from fastapi import FastAPI, File, UploadFile
 from PIL import Image
+from torchvision import transforms
+
+from src.models.model import CatDogModel
 
 app = FastAPI()
 
