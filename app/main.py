@@ -49,7 +49,7 @@ async def cv_model(data: UploadFile = File(...)):
       "input": data,
       "message": HTTPStatus.OK.phrase,
       "status-code": HTTPStatus.OK,
-      "prediction for the uploaded image": class_labels[int(pred.item())]
+      "the model's prediction for the uploaded image": class_labels[int(pred.item())]
       
    }
    return response
