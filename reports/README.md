@@ -230,6 +230,7 @@ In total we have implemented 12 tests. For the data part we are testing the trai
 > Answer:
 
 The total code coverage is 88% and can be seen in the table below. Only the `make_dataset.py` file was not fully covered and it was the Kaggle API authentication/data download part and the main function. Even though the coverage is quite high, it does not ensure that the code is error free, because we have likely not tested all of the possible edge cases. 
+```
 Name                       Stmts   Miss  Cover   Missing
 --------------------------------------------------------
 src/__init__.py                0      0   100%
@@ -243,7 +244,7 @@ tests/test_model.py           15      0   100%
 tests/test_training.py        19      0   100%
 --------------------------------------------------------
 TOTAL                        202     25    88%
-
+```
 
 ### Question 9
 
@@ -315,7 +316,7 @@ https://github.com/charfimohamed/mlops_project/actions/runs/3953847408
 >
 > Answer:
 
-We used the Hydra configuration tool. We created a simple yaml configuration file containing different values that our hyperparameters can take and within the training_model file we extracted random values from the configuration parameters and used them as input values to run a hyperparameter optimization sweep using WandB. Doing 10 experiments with different configurations we displayed the accuracy results of each experiment on our weightsandBiases accounts and we found the best values for our parameters to maximize the validation accuracy.
+We used the Hydra configuration tool. We created a simple yaml configuration file containing different values that our hyperparameters can take and within the training_model file we extracted random values from the configuration parameters and used them as input values to run a hyperparameter optimization sweep using WandB. Doing 10 experiments with different configurations we displayed the accuracy results of each experiment on our WandB accounts and we found the best values for our parameters to maximize the validation accuracy.
 And as a coding example, here is our configuration file content:
 ```
 #config.yaml
