@@ -49,7 +49,7 @@ class CatDogDataset(Dataset):
         kaggle.api.authenticate()
         kaggle.api.dataset_download_files("alifrahman/dataset-for-wbc-classification", path=download_path, unzip=True)
 
-    def prepare_dataframe(self, split:str):
+    def prepare_dataframe(self, split: str):
         categories = []
         filenames = []
         SEED = 42
@@ -96,7 +96,7 @@ class CatDogDataset(Dataset):
     def __len__(self):
         return len(self.df)
 
-    def __getitem__(self, idx:int):
+    def __getitem__(self, idx: int):
         folder = "train" if self.split == "train" else "validation"
         img = PIL.Image.open(self.in_folder / "data" / folder / self.category[idx] / self.file_names[idx])
 
@@ -119,8 +119,14 @@ def main(input_filepath, output_filepath):
     logger = logging.getLogger(__name__)
     logger.info("making final data set from raw data")
 
-    image_size = 16
-    data_resize = transforms.Compose([transforms.Resize((image_size, image_size)), transforms.ToTensor()])
+    image_size = 128
+    data_resize = transforms.Compose(
+        [
+            transforms.Resize((image_size, image_size)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+        ]
+    )
 
     train_dataset = CatDogDataset(
         split="train",

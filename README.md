@@ -8,17 +8,16 @@ Ahmed Aziz Ben Haj Hmida s221551.
 
 ### Overall goal of the project
 
-The goal of the project is to use convolutional neural network for binary classification of cats and dogs.
-
+The goal of the project is to use convolutional neural network for binary classification of cats and dogs and use the tools that we learned throughout the exercises.
 
 ### What framework are you going to use (PyTorch Image Models, Transformer, Pytorch-Geometrics)
 
-Since we are working with cat and dog images we will be using torchvision
+Since we are working with cat and dog images we will be using torchvision.
 
 
 ### How to you intend to include the framework into your project
 
-We are going to use one of the pre-trained model from torch vision .
+We are going to use one of the pre-trained model from torch vision.
 
 
 ### What data are you going to run on (initially, may change)
@@ -28,7 +27,7 @@ Initially, we plan to use cats and dogs [dataset](https://www.kaggle.com/dataset
 
 ### What deep learning models do you expect to use
 
-We are planning to use [Inception ResNet v2](https://arxiv.org/pdf/1602.07261.pdf) which builds on the Inception architecture but replaces the filter concatenation stage with residual connections. We will use the [implemented pre-trained model](https://huggingface.co/docs/timm/models/inception-resnet-v2) from PyTorch Image Models.
+We are planning to use ResNet-50 (https://pytorch.org/vision/main/models/generated/torchvision.models.resnet50.html). We will use the pretrained model from torchvision.
 
 Get started
 ------------
@@ -47,10 +46,50 @@ conda activate mlops_project
 ```
 pip install -r requirements.txt
 ```
-5. 
+5. download the data
 ```
-make data
+make data  
 ```
+or
+```
+dvc pull
+```
+6. train the model : navigate to src/models and run: 
+```
+python train_model.py
+```
+or (if you want to run the wandb sweep and profiling): navigate to src/models and run:
+```
+python optimize_train_model.py
+```
+7. test the model : navigate to src/models and run: 
+```
+python predict_model.py
+```
+or (if you want to test the model with quantization): navigate to src/models and run:
+```
+python predict_model_quantization.py
+```
+8. run the unit tests with coverage:
+```
+coverage run -m pytest tests/
+```
+and 
+```
+coverage report
+```
+9. create the API to deploy the model locally: navigate to app/ and run:
+```
+uvicorn --reload --port 8000 main:app
+```
+10. to test the model that we trained (97% test accuracy): 
+(only works if our Cloud Run in GCP is still running)
+```
+curl -X POST -H "Content-Type: multipart/form-data" -F "data=@imagepath/image.png" https://inference-for-gcp-sjsexi6d7a-ew.a.run.app/cv_model/
+```
+where imagepath/image.png is the path to the image you want to classify.
+you can also type in your favourite browser:  https://inference-for-gcp-sjsexi6d7a-ew.a.run.app/docs, click on try it out, upload your image and execute. you'll see the classification in the response
+
 
 Project Organization
 ------------
