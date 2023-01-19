@@ -4,4 +4,4 @@ workerPoolSpecs:
       machineType: n1-highmem-2
    replicaCount: 1
    containerSpec:
-      imageUri: gcr.io/dtumlops-374918/trainer
+      imageUri: gcr.io/dtumlops-374918/cloudtrainer
