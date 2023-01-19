@@ -399,8 +399,7 @@ Link to the inference dockerfile : https://github.com/charfimohamed/mlops_projec
 >
 > Answer:
 
-Debugging was mostly dealt with by wrapping the code with prints whenever there is a bug and following the problem to its source step by step.
-We implemented profiling by using the PyTorch Profiler to profile the CPU/CUDA activities during the training of the model. The "with profile" statement is creating a context in which the profiler will collect data. The schedule argument is used to set the timing of the profiler's collection of data. In this case, it is set to wait for 0 seconds, warm-up for 0 seconds, and then actively collect data for 10 seconds.
+Initial debugging was done using print statements. We implemented profiling by using the PyTorch Profiler to profile the CPU/CUDA activities during the training of the model. The "with profile" statement is creating a context in which the profiler will collect data. The schedule argument is used to set the timing of the profiler's collection of data. In this case, it is set to wait for 0 seconds, warm-up for 0 seconds, and then actively collect data for 10 seconds.
 The profiler's step function is called inside the for-loop for training the model, this will start collecting the data for CPU and CUDA activities for each step of the training and the data can be analyzed to understand the performance of the model during training. Then we print out a table of key averages of the collected data, sorted by "cpu_time_total" and limited to the top 15 rows. This table is used to understand which functions are taking the most time during the training. And as shown in the table below the code doesn’t need any specific optimization since the model uses 50% of the total CPU time, which is quite enough.
 
 
@@ -422,12 +421,12 @@ The profiler's step function is called inside the for-loop for training the mode
 >
 > Answer:
 
-In our project we made use of these services : 
-- Compute engine : we tried to use the compute engine to train our model in a virtual machine but we finally trained our model locally since it takes 5 to 10 minutes to be trained 
-- Cloud storage : we used the cloud storage in GCP to store our data in the cloud using dvc (created a google cloud storage bucket and configured dvc)
-- Cloud build : we used the cloud build to build docker images on the cloud whenever we push in the main github branch : everytime we push a docker image corresponding to the inference.dockerfile dockerfile is created and stored in the cloud
-- Vertex AI : we trained our model using a custom job after configuring the cloudtrainer image in the cloud that trains the model but we didn’t manage to extract the model checkpoint from the cloud
-- Cloud run : we created a service that pulls the data from our git repository,builds an image using cloudbuild.yaml for inference so that whenever someone pushes in the main branch, the image rebuilds and the inference API changes. With this tool the FastAPI is always running on the cloud and updated everytime we push
+Following services were used:
+- Compute engine: we tried to use the compute engine to train our model in a virtual machine but we finally trained our model locally since it takes 5 to 10 minutes to be trained 
+- Cloud storage: we used the cloud storage in GCP to store our data in the cloud using dvc (created a google cloud storage bucket and configured dvc)
+- Cloud build: we used the cloud build to build docker images on the cloud whenever we push in the main github branch : everytime we push a docker image corresponding to the inference.dockerfile dockerfile is created and stored in the cloud
+- Vertex AI: we trained our model using a custom job after configuring the cloudtrainer image in the cloud that trains the model but we didn’t manage to extract the model checkpoint from the cloud
+- Cloud run: we created a service that pulls the data from our git repository, builds an image using cloudbuild.yaml for inference so that whenever someone pushes in the main branch, the image rebuilds and the inference API changes. With this tool the FastAPI is always running on the cloud and updated everytime we push
 
 
 ### Question 18
