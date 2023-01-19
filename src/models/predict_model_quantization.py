@@ -1,16 +1,13 @@
 from pathlib import Path
-
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from torchvision import transforms
-
 from src.data.make_dataset import CatDogDataset
 from src.models.model import CatDogModel
-
+import torch.quantization
 import time
-
 def test(batch_size: int = 32):
     """
     tests the neural network after training
@@ -26,6 +23,13 @@ def test(batch_size: int = 32):
     # loading the best parameters for the model
     checkpoint = torch.load("checkpoints/model_best_checkpoint.pth")
     model.load_state_dict(checkpoint["model"])
+
+    # apply dynamic quantization
+    model = torch.quantization.quantize_dynamic(model,{torch.nn.Linear},dtype=torch.qint8)
+
+    torch.quantization.prepare(model,inplace=True)
+    model = torch.quantization.convert(model)
+
     model.eval()
     # transfers the model from CPU to the device which is either GPU or CPU that was defined above
     model.to(DEVICE)

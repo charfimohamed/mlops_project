@@ -8,14 +8,12 @@ on:
 
 jobs:
   build:
-
-    runs-on: macOs-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ["3.9"]
-        os: ["macOS-12.6", "macOS-13.0.1"]
+        python-version: ["3.8", "3.9", "3.10"]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         pytorch-version: ["1.11.0", "1.12.0"]
-
 
     steps:
       - name: Checkout
@@ -24,10 +22,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      # You can test your matrix by printing the current Python version
-      - name: Display Python version
-        run: python -c "import sys; print(sys.version)"
-
     
       - name: Get pip cache dir
         id: pip-cache
@@ -48,20 +42,11 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements_tests.txt
 
-          
       - name: Test with pytest
         run: |
           pip install pytest
           pip install pytest-cov
-          pytest -v
-
-
-      - name: Test with pytest and generate report
-        run: |
-          coverage run --source=./src -m pytest tests/
-      - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v2    
-
+          pytest -v 
 
       - name: Install tox and any other packages
         run: pip install tox

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import multiprocessing
 import os
 from pathlib import Path
 
@@ -9,14 +10,13 @@ import pandas as pd
 import PIL
 from dotenv import find_dotenv, load_dotenv
 load_dotenv()
-
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
-
+import argparse
 import kaggle
-
+import time
 kaggle_username = os.environ.get('KAGGLE_USERNAME')
 kaggle_key = os.environ.get('KAGGLE_KEY')
 
@@ -40,6 +40,7 @@ class CatDogDataset(Dataset):
         self.category = self.df["category"].values
 
         self.transform = transform
+        self.threads = multiprocessing.cpu_count
 
     def download_raw_data(self, download_path: Path):
         """
@@ -111,6 +112,7 @@ class CatDogDataset(Dataset):
 @click.argument("input_filepath", type=click.Path(exists=True))
 @click.argument("output_filepath", type=click.Path())
 def main(input_filepath, output_filepath):
+    start = time.time()
     """Runs data processing scripts to turn raw data from (../raw) into
     cleaned data ready to be analyzed (saved in ../processed).
     """
@@ -128,24 +130,45 @@ def main(input_filepath, output_filepath):
         out_folder=output_filepath,
         transform=data_resize,
     )
+    train_dataloader = DataLoader(train_dataset, batch_size=1024, shuffle=True, num_workers=4)
+
     validation_dataset = CatDogDataset(
         split="validation",
         in_folder=input_filepath,
         out_folder=output_filepath,
-        transform=data_resize,
+        transform=data_resize
     )
+    validation_dataloader = DataLoader(validation_dataset, batch_size=1024, shuffle=True, num_workers=4)
     test_dataset = CatDogDataset(
         split="test",
         in_folder=input_filepath,
         out_folder=output_filepath,
         transform=data_resize,
     )
+    test_dataloader = DataLoader(test_dataset, batch_size=1024, shuffle=True,num_workers=4)
+
     print(f"train dataset size is : {len(train_dataset)}")
     print(f"validation dataset size is : {len(validation_dataset)}")
     print(f"test dataset size is : {len(test_dataset)}")
-
+    print(f"train dataloader size is : {len(train_dataloader)}")
+    print(f"train dataloader batch size is : {train_dataloader.batch_size}")
+    print(f"validation dataloader batch size is : {validation_dataloader.batch_size}")
+    print(f"test dataloader batch size is : {test_dataloader.batch_size}")
+    end = time.time()
+    execution_time = end - start
+    print("Execution time:", execution_time)
 
 if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('INPUT_FILEPATH', type=str, nargs=1)
+    parser.add_argument('OUTPUT_FILEPATH', type=str, nargs=1)
+    #parser.add_argument('-num_workers', default=multiprocessing.cpu_count(), type=int)
+    #parser.add_argument('-get_timing', action='store_true')
+    #parser.add_argument('-batch_size', default=32, type=int)
+    args = parser.parse_args()
+
+
     log_fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     logging.basicConfig(level=logging.INFO, format=log_fmt)
 
@@ -158,5 +181,11 @@ if __name__ == "__main__":
     # find .env automagically by walking up directories until it's found, then
     # load up the .env entries as environment variables
     load_dotenv(find_dotenv())
+    
 
-    main()
+    #if args.get_timing:
+    
+    main(args.input_file[0], args.output_file[0]
+    
+    #else:
+        #main(args.INPUT_FILEPATH,args.OUTPUT_FILEPATH)
