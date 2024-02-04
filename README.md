@@ -2,7 +2,8 @@ project description - Binary classification of cats and dogs
 ==============================
 ### Overall goal of the project
 
-The goal of the project is to use convolutional neural network for binary classification of cats and dogs and use the tools that we learned throughout the exercises.
+The goal of the project is to use convolutional neural network for binary classification of cats and dogs 
+The main focus of the project is to use the most famous machine learning tools (FastApi, training the model on Google cloud, github Actions etc..)
 
 ### Dataset:
 
