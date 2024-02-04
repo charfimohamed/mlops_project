@@ -1,33 +1,17 @@
-MLOPS project description - Binary classification of cats and dogs
+project description - Binary classification of cats and dogs
 ==============================
-Nojus Mickus s174447.
-
-Mohamed Charfi s221586.
-
-Ahmed Aziz Ben Haj Hmida s221551.
-
 ### Overall goal of the project
 
 The goal of the project is to use convolutional neural network for binary classification of cats and dogs and use the tools that we learned throughout the exercises.
 
-### What framework are you going to use (PyTorch Image Models, Transformer, Pytorch-Geometrics)
+### Dataset:
 
-Since we are working with cat and dog images we will be using torchvision.
-
-
-### How to you intend to include the framework into your project
-
-We are going to use one of the pre-trained model from torch vision.
+we use cats and dogs [dataset](https://www.kaggle.com/datasets/alifrahman/dataset-for-wbc-classification) found on Kaggle. It contains 1000 examples each for training and 401 each for validation.
 
 
-### What data are you going to run on (initially, may change)
+### used model: 
 
-Initially, we plan to use cats and dogs [dataset](https://www.kaggle.com/datasets/alifrahman/dataset-for-wbc-classification) found on Kaggle. It contains 1000 examples each for training and 401 each for validation.
-
-
-### What deep learning models do you expect to use
-
-We are planning to use ResNet-50 (https://pytorch.org/vision/main/models/generated/torchvision.models.resnet50.html). We will use the pretrained model from torchvision.
+We use  ResNet-50 (https://pytorch.org/vision/main/models/generated/torchvision.models.resnet50.html). We will use the pretrained model from torchvision.
 
 Get started
 ------------
