@@ -1,6 +1,6 @@
 project description - Binary classification of cats and dogs
 ==============================
-### Overall goal of the project
+### Overall goal of the project [](https://github.com/charfimohamed/mlops_project)
 
 The goal of the project is to use convolutional neural network for binary classification of cats and dogs 
 The main focus of the project is to use the most famous machine learning tools (FastApi, training the model on Google cloud, github Actions etc..)
